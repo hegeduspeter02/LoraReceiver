@@ -1,6 +1,8 @@
 #include <LoraReceiver.h>
 #include <SPI.h>
 
+WeatherData weatherData;
+
 void setup() {
   esp_task_wdt_deinit();  // This will stop and clear the previously initialized TWDT
 
@@ -41,6 +43,7 @@ void loop() {
   if(is_packet_received) {
     is_packet_received = false; 
     String message = readPacket();  // Read and process the packet
+    weatherData = deSerializeWeatherData(message);
 
     esp_task_wdt_reset(); // Reset the wdt
   }
