@@ -45,7 +45,7 @@ void loop() {
     String message = readPacket();  // Read and process the packet
     weatherData = deSerializeWeatherData(message);
 
-    printMeasureToSerialMonitor(WeatherData &weatherData)
+    printMeasureToSerialMonitor(weatherData);
 
     esp_task_wdt_reset(); // Reset the wdt
   }

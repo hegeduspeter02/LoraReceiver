@@ -29,6 +29,7 @@ struct WeatherData {
   uint8_t uvIndex;
   uint8_t soilMoisture;
   uint8_t rainPercent;
+  int8_t packetRSSI;
 };
 
 /*****************************************************************/
