@@ -13,9 +13,10 @@ String readPacket() {
   }
 
   Serial.println(message);
+
   // print RSSI of packet(dBm)
-  Serial.print("RSSI ");
-  Serial.println(LoRa.packetRssi());
+  // Serial.print("RSSI ");
+  // Serial.println(LoRa.packetRssi());
 
   return message;
 }
@@ -35,6 +36,24 @@ WeatherData deSerializeWeatherData(const String& string)
   weatherData.rainPercent = (uint8_t) data[5];
 
   return weatherData;
+}
+
+/****************************************************************/
+void printMeasureToSerialMonitor(WeatherData& weatherData)
+{
+  Serial.printf("Temp: %.2f\xB0C\n"
+                "Humidity: %.2f%% RH\n"
+                "Pressure: %.2f hPa\n"
+                "UV index: %d\n"
+                "Soil moisture: %d%%\n"
+                "Rain intensity: %d%%\n"
+                "---------------------------------------------------------\n", 
+                weatherData.temperature,
+                weatherData.humidity,
+                weatherData.pressure,
+                weatherData.uvIndex,
+                weatherData.soilMoisture,
+                weatherData.rainPercent);
 }
 
 /*****************************************************************/

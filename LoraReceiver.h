@@ -44,5 +44,9 @@ String readPacket();
 WeatherData deSerializeWeatherData(const String& string);
 
   ///////////////////////////////////////////////////////////////
+  /// Prints the weatherData to the Serial Monitor.
+void printMeasureToSerialMonitor(WeatherData& weatherData);
+
+  ///////////////////////////////////////////////////////////////
   /// Callback function called when packet is received.
 void onReceive(int packetSize);
