@@ -49,7 +49,8 @@ void printMeasureToSerialMonitor(WeatherData& weatherData)
                 weatherData.pressure,
                 weatherData.uvIndex,
                 weatherData.soilMoisture,
-                weatherData.rainPercent);
+                weatherData.rainPercent,
+                weatherData.packetRSSI);
 }
 
 /*****************************************************************/
