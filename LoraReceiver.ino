@@ -20,11 +20,8 @@ void setup() {
   Serial.begin(9600);
   while (!Serial);
 
-  Serial.println("LoRa Receiver");
-
   SPIClass spi;
-  // set SPI pins
-  spi.begin(SPI_SCLK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN, SPI_CS0_PIN);
+  spi.begin(SPI_SCLK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN, SPI_CS0_PIN); // set SPI pins
   
   LoRa.setPins(RFM95_CS0_PIN, RFM95_RESET_PIN, RFM95_DIO0_PIN);
 
@@ -42,10 +39,14 @@ void setup() {
 void loop() {
   if(is_packet_received) {
     is_packet_received = false; 
-    String message = readPacket();  // Read and process the packet
-    weatherData = deSerializeWeatherData(message);
+    String message = readPacket();
 
-    printMeasureToSerialMonitor(weatherData);
+    // create a JSON document
+    DynamicJsonDocument jsonBuffer(4096);
+    JsonArray root = jsonBuffer.to<JsonArray>();
+    decodeHexStringToJson(message, jsonBuffer, root);
+
+    //printMeasureToSerialMonitor(weatherData);
 
     esp_task_wdt_reset(); // Reset the wdt
   }

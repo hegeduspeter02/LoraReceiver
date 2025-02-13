@@ -2,6 +2,7 @@
 #include <LoRa.h>
 #include <esp_task_wdt.h>
 #include <ArduinoJson.h>
+#include <CayenneLPP.h>
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -14,10 +15,12 @@
 #define SPI_SCLK_PIN 18
 #define SPI_CS0_PIN 5
 
+#define MAX_PAYLOAD_SIZE 51 // bytes
+
 /*****************************************************************/
 /* GLOBAL VARIABLES                                              */
 /*****************************************************************/
-extern bool is_packet_received;
+extern volatile bool is_packet_received;
 
 /*****************************************************************/
 /* STRUCTURES                                                    */
@@ -40,9 +43,12 @@ struct WeatherData {
   /// Read the message in the packet.
 String readPacket();
 
+void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize);
+
   ///////////////////////////////////////////////////////////////
-  /// Populate the WeatherData struct from the received JSON string.
-WeatherData deSerializeWeatherData(const String& string);
+  /// Convert the received hexadecimal encoded Low Power Payload 
+  /// string to JSON array.
+void decodeHexStringToJson(const String& string, DynamicJsonDocument& jsonBuffer, JsonArray& root);
 
   ///////////////////////////////////////////////////////////////
   /// Prints the weatherData to the Serial Monitor.

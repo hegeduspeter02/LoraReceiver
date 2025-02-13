@@ -2,7 +2,7 @@
 #include <esp_task_wdt.h>
 
 /*****************************************************************/
-bool is_packet_received = false;
+volatile bool is_packet_received = false;
 
 /*****************************************************************/
 String readPacket() {
@@ -15,22 +15,25 @@ String readPacket() {
   return message;
 }
 
-WeatherData deSerializeWeatherData(const String& string)
+void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize) {
+  byteArraySize = hexString.length() / 2; // each byte is represented with two hex characters
+  for (size_t i = 0; i < byteArraySize; i++) {
+    sscanf(hexString.substring(i * 2, i * 2 + 2).c_str(), "%02hhX", &byteArray[i]);
+  }
+}
+
+void decodeHexStringToJson(const String& hexString, DynamicJsonDocument& jsonBuffer, JsonArray& root)
 {
-  JsonDocument doc;
-  deserializeJson(doc, string);
+  uint8_t buffer[MAX_PAYLOAD_SIZE];
+  size_t bufferSize;
 
-  WeatherData weatherData;
-  JsonArray data = doc["data"];
-  weatherData.temperature = (float) data[0];
-  weatherData.humidity = (float) data[1];
-  weatherData.pressure = (float) data[2];
-  weatherData.uvIndex = (uint8_t) data[3];
-  weatherData.soilMoisture = (uint8_t) data[4];
-  weatherData.rainPercent = (uint8_t) data[5];
-  weatherData.packetRSSI = LoRa.packetRssi();
+  convertHexStringToByteArray(hexString, buffer, bufferSize);
 
-  return weatherData;
+  CayenneLPP lpp(MAX_PAYLOAD_SIZE);
+  lpp.decode(buffer, bufferSize, root);
+
+  serializeJson(root, Serial);
+  Serial.println();
 }
 
 /****************************************************************/
