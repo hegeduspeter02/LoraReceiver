@@ -49,7 +49,6 @@ void loop() {
 
     String JSONPacket;
     serializeJson(JSONArrayPacket, JSONPacket);
-    Serial.println(JSONPacket);
 
     parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
 
