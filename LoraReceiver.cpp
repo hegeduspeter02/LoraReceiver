@@ -82,7 +82,7 @@ void printMeasureToSerialMonitor(WeatherData& weatherData)
                 weatherData.uvIndex,
                 weatherData.soilMoisture,
                 weatherData.rainPercent,
-                weatherData.packetRSSI);
+                LoRa.rssi());
 }
 
 /*****************************************************************/

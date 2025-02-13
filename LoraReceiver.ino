@@ -48,7 +48,8 @@ void loop() {
     decodePacketToJsonArray(message, JSONArrayPacket);
 
     String JSONPacket;
-    serializeJson(JSONArrayPacket, JSONPacket);    
+    serializeJson(JSONArrayPacket, JSONPacket);
+    Serial.println(JSONPacket);
 
     parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
 
