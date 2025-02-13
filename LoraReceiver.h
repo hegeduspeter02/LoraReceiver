@@ -16,6 +16,10 @@
 #define SPI_CS0_PIN 5
 
 #define MAX_PAYLOAD_SIZE 51 // bytes
+#define BME_280_SENSOR_IDENTIFIER 1
+#define UV_SENSOR_IDENTIFIER 2
+#define SOIL_MOISTURE_SENSOR_IDENTIFIER 3
+#define RAIN_SENSOR_IDENTIFIER 4
 
 /*****************************************************************/
 /* GLOBAL VARIABLES                                              */
@@ -48,7 +52,9 @@ void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, si
   ///////////////////////////////////////////////////////////////
   /// Convert the received hexadecimal encoded Low Power Payload 
   /// string to JSON array.
-void decodeHexStringToJson(const String& string, DynamicJsonDocument& jsonBuffer, JsonArray& root);
+void decodePacketToJsonArray(const String& hexString, JsonArray& JSONArrayPacket);
+
+void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, WeatherData& weatherData);
 
   ///////////////////////////////////////////////////////////////
   /// Prints the weatherData to the Serial Monitor.

@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <LoraReceiver.h>
 #include <esp_task_wdt.h>
 
@@ -22,7 +23,7 @@ void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, si
   }
 }
 
-void decodeHexStringToJson(const String& hexString, DynamicJsonDocument& jsonBuffer, JsonArray& root)
+void decodePacketToJsonArray(const String& hexString, JsonArray& JSONArrayPacket)
 {
   uint8_t buffer[MAX_PAYLOAD_SIZE];
   size_t bufferSize;
@@ -30,18 +31,46 @@ void decodeHexStringToJson(const String& hexString, DynamicJsonDocument& jsonBuf
   convertHexStringToByteArray(hexString, buffer, bufferSize);
 
   CayenneLPP lpp(MAX_PAYLOAD_SIZE);
-  lpp.decode(buffer, bufferSize, root);
+  lpp.decode(buffer, bufferSize, JSONArrayPacket);
+}
 
-  serializeJson(root, Serial);
-  Serial.println();
+void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, WeatherData& weatherData)
+{
+  for (JsonObject obj : JSONArrayPacket) {
+    String dataTypeName = obj["name"];
+    float value = obj["value"];
+
+    if (dataTypeName == "temperature") {
+        weatherData.temperature = value;
+    }
+    else if (dataTypeName == "humidity") {
+        weatherData.humidity = value;
+    }
+    else if (dataTypeName == "pressure") {
+        weatherData.pressure = value;
+    }
+    else if (dataTypeName == "digital_out") {
+      switch ((uint8_t)obj["channel"]) {
+        case UV_SENSOR_IDENTIFIER:
+          weatherData.uvIndex = (uint8_t)value;
+          break;
+        case SOIL_MOISTURE_SENSOR_IDENTIFIER:
+          weatherData.soilMoisture = (uint8_t)value;
+          break;
+        case RAIN_SENSOR_IDENTIFIER:
+          weatherData.rainPercent = (uint8_t)value;
+          break;
+      }
+    }
+  }
 }
 
 /****************************************************************/
 void printMeasureToSerialMonitor(WeatherData& weatherData)
 {
-  Serial.printf("Temp: %.2f\xB0C\n"
-                "Humidity: %.2f%% RH\n"
-                "Pressure: %.2f hPa\n"
+  Serial.printf("Temp: %.1f\xB0C\n"
+                "Humidity: %.1f%% RH\n"
+                "Pressure: %.1f hPa\n"
                 "UV index: %d\n"
                 "Soil moisture: %d%%\n"
                 "Rain intensity: %d%%\n"

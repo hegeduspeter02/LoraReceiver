@@ -31,7 +31,7 @@ void setup() {
   }
 
   LoRa.onReceive(onReceive);
-  LoRa.receive();
+  LoRa.receive(); // put the radio into receive mode
 
   // LoRa.sleep();
 }
@@ -43,10 +43,16 @@ void loop() {
 
     // create a JSON document
     DynamicJsonDocument jsonBuffer(4096);
-    JsonArray root = jsonBuffer.to<JsonArray>();
-    decodeHexStringToJson(message, jsonBuffer, root);
+    JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
-    //printMeasureToSerialMonitor(weatherData);
+    decodePacketToJsonArray(message, JSONArrayPacket);
+
+    String JSONPacket;
+    serializeJson(JSONArrayPacket, JSONPacket);    
+
+    parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
+
+    printMeasureToSerialMonitor(weatherData);
 
     esp_task_wdt_reset(); // Reset the wdt
   }
