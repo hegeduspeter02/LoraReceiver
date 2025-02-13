@@ -68,7 +68,7 @@ void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, W
 /****************************************************************/
 void printMeasureToSerialMonitor(WeatherData& weatherData)
 {
-  Serial.printf("Temp: %.1f\xB0C\n"
+  Serial.printf("Temp: %.1f°C\n"
                 "Humidity: %.1f%% RH\n"
                 "Pressure: %.1f hPa\n"
                 "UV index: %d\n"
