@@ -2,10 +2,24 @@
 #include <LoraReceiver.h>
 #include <esp_task_wdt.h>
 
-/*****************************************************************/
 volatile bool is_packet_received = false;
 
-/*****************************************************************/
+void initializeSerialCommunication()
+{
+  Serial.begin(SERIAL_BAUD);
+  while(!Serial) {} // wait until the serial port is ready and connected
+  delay(1000); // wait for Serial Monitor to initialize
+}
+
+void configureGPIO()
+{
+  gpio_set_direction((gpio_num_t) RFM95_RESET_PIN, (gpio_mode_t) GPIO_MODE_OUTPUT);
+
+  gpio_set_direction((gpio_num_t) RFM95_DIO0_PIN, (gpio_mode_t) GPIO_MODE_INPUT);
+  gpio_intr_enable((gpio_num_t) RFM95_DIO0_PIN);
+  gpio_set_intr_type((gpio_num_t) RFM95_DIO0_PIN, (gpio_int_type_t) GPIO_INTR_POSEDGE);
+}
+
 String readPacket() {
   String message;
 
@@ -65,10 +79,9 @@ void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, W
   }
 }
 
-/****************************************************************/
 void printMeasureToSerialMonitor(WeatherData& weatherData)
 {
-  Serial.printf("Temp: %.1f°C\n"
+  Serial.printf("Temp: %.1f °C\n"
                 "Humidity: %.1f%% RH\n"
                 "Pressure: %.1f hPa\n"
                 "UV index: %d\n"
@@ -85,7 +98,6 @@ void printMeasureToSerialMonitor(WeatherData& weatherData)
                 LoRa.rssi());
 }
 
-/*****************************************************************/
 void onReceive(int packetSize) {
   is_packet_received = true;
 }

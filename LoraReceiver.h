@@ -7,13 +7,13 @@
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
 /*****************************************************************/
-#define RFM95_CS0_PIN 5
-#define RFM95_DIO0_PIN 17
-#define RFM95_RESET_PIN 16
-#define SPI_MOSI_PIN 23
-#define SPI_MISO_PIN 19
-#define SPI_SCLK_PIN 18
+#define RFM95_RESET_PIN 25
+#define RFM95_DIO0_PIN 26
+
 #define SPI_CS0_PIN 5
+#define SPI_SCLK_PIN 18
+#define SPI_MISO_PIN 19
+#define SPI_MOSI_PIN 23
 
 #define MAX_PAYLOAD_SIZE 51 // bytes
 #define BME_280_SENSOR_IDENTIFIER 1
@@ -38,6 +38,19 @@ struct WeatherData {
   uint8_t rainPercent;
   int8_t packetRSSI;
 };
+
+/*****************************************************************/
+/* INIT FUNCTIONS                                                */
+/*****************************************************************/
+
+  ///////////////////////////////////////////////////////////////
+  /// Start the Serial communication at SERIAL_BAUD rate.
+  /// Wait for the serial port and the Monitor to be ready.
+void initializeSerialCommunication();
+
+  ///////////////////////////////////////////////////////////////
+  /// Configure the ESP32's pins.
+void configureGPIO();
 
 /*****************************************************************/
 /* WORKER FUNCTIONS                                              */

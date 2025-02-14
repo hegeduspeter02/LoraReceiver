@@ -17,13 +17,14 @@ void setup() {
 
   esp_task_wdt_add(NULL); // subscribe the current running task to the wdt
 
-  Serial.begin(9600);
-  while (!Serial);
+  initializeSerialCommunication();
 
   SPIClass spi;
   spi.begin(SPI_SCLK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN, SPI_CS0_PIN); // set SPI pins
+
+  configureGPIO();
   
-  LoRa.setPins(RFM95_CS0_PIN, RFM95_RESET_PIN, RFM95_DIO0_PIN);
+  LoRa.setPins(SPI_CS0_PIN, RFM95_RESET_PIN, RFM95_DIO0_PIN);
 
   if (!LoRa.begin(868E6)) {
     Serial.println("Starting LoRa failed!");
