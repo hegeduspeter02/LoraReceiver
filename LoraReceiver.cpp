@@ -1,3 +1,4 @@
+#include "esp_attr.h"
 #include <stdint.h>
 #include <LoraReceiver.h>
 #include <esp_task_wdt.h>
@@ -13,11 +14,8 @@ void initializeSerialCommunication()
 
 void configureGPIO()
 {
-  gpio_set_direction((gpio_num_t) RFM95_RESET_PIN, (gpio_mode_t) GPIO_MODE_OUTPUT);
-
-  gpio_set_direction((gpio_num_t) RFM95_DIO0_PIN, (gpio_mode_t) GPIO_MODE_INPUT);
-  gpio_intr_enable((gpio_num_t) RFM95_DIO0_PIN);
-  gpio_set_intr_type((gpio_num_t) RFM95_DIO0_PIN, (gpio_int_type_t) GPIO_INTR_POSEDGE);
+  pinMode(RFM95_RESET_PIN, OUTPUT);
+  pinMode(RFM95_DIO0_PIN, INPUT);
 }
 
 String readPacket() {
@@ -79,7 +77,7 @@ void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, W
   }
 }
 
-void printMeasureToSerialMonitor(WeatherData& weatherData)
+void printWeatherDataToSerialMonitor(WeatherData& weatherData)
 {
   Serial.printf("Temp: %.1f °C\n"
                 "Humidity: %.1f%% RH\n"

@@ -7,6 +7,10 @@
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
 /*****************************************************************/
+#ifndef DEBUG_MODE
+#define DEBUG_MODE 1
+#endif
+
 #define SERIAL_BAUD 9600 // bps
 
 #define RFM95_RESET_PIN 25
@@ -73,7 +77,9 @@ void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, W
 
   ///////////////////////////////////////////////////////////////
   /// Prints the weatherData to the Serial Monitor.
-void printMeasureToSerialMonitor(WeatherData& weatherData);
+void printWeatherDataToSerialMonitor(WeatherData& weatherData);
+
+void ARDUINO_ISR_ATTR onDio0Rise();
 
   ///////////////////////////////////////////////////////////////
   /// Callback function called when packet is received.

@@ -2,9 +2,10 @@
 #include <SPI.h>
 
 WeatherData weatherData;
+String JSONPacket;
 
 void setup() {
-  esp_task_wdt_deinit();  // This will stop and clear the previously initialized TWDT
+  /*esp_task_wdt_deinit();  // This will stop and clear the previously initialized TWDT
 
   // Configure and reinitialize the TWDT
   esp_task_wdt_config_t twdt_config = {
@@ -15,7 +16,7 @@ void setup() {
 
   esp_task_wdt_init(&twdt_config);
 
-  esp_task_wdt_add(NULL); // subscribe the current running task to the wdt
+  esp_task_wdt_add(NULL); // subscribe the current running task to the wdt*/
 
   initializeSerialCommunication();
 
@@ -31,10 +32,10 @@ void setup() {
     while (1);
   }
 
-  LoRa.onReceive(onReceive);
-  LoRa.receive(); // put the radio into receive mode
+  LoRa.onReceive(onReceive); // register the receive callback
 
-  // LoRa.sleep();
+  gpio_wakeup_enable((gpio_num_t) RFM95_DIO0_PIN, (gpio_int_type_t) GPIO_INTR_POSEDGE);
+  esp_sleep_enable_gpio_wakeup();
 }
 
 void loop() {
@@ -47,14 +48,17 @@ void loop() {
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
     decodePacketToJsonArray(message, JSONArrayPacket);
-
-    String JSONPacket;
     serializeJson(JSONArrayPacket, JSONPacket);
 
     parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
 
-    printMeasureToSerialMonitor(weatherData);
+    #if DEBUG_MODE
+        printWeatherDataToSerialMonitor(weatherData);
+    #endif
 
-    esp_task_wdt_reset(); // Reset the wdt
+    LoRa.sleep();
+    esp_light_sleep_start();
+
+    //esp_task_wdt_reset(); // Reset the wdt
   }
 }
