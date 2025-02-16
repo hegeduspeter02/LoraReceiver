@@ -79,7 +79,7 @@ void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, W
   /// Prints the weatherData to the Serial Monitor.
 void printWeatherDataToSerialMonitor(WeatherData& weatherData);
 
-void ARDUINO_ISR_ATTR onDio0Rise();
+void onCadDone(boolean signalDetected);
 
   ///////////////////////////////////////////////////////////////
   /// Callback function called when packet is received.

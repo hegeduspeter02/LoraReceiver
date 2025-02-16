@@ -1,3 +1,4 @@
+#include "FunctionalInterrupt.h"
 #include "esp_attr.h"
 #include <stdint.h>
 #include <LoraReceiver.h>
@@ -18,7 +19,8 @@ void configureGPIO()
   pinMode(RFM95_DIO0_PIN, INPUT);
 }
 
-String readPacket() {
+String readPacket()
+{
   String message;
 
   while (LoRa.available()) {
@@ -28,7 +30,8 @@ String readPacket() {
   return message;
 }
 
-void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize) {
+void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize)
+{
   byteArraySize = hexString.length() / 2; // each byte is represented with two hex characters
   for (size_t i = 0; i < byteArraySize; i++) {
     sscanf(hexString.substring(i * 2, i * 2 + 2).c_str(), "%02hhX", &byteArray[i]);
@@ -96,6 +99,18 @@ void printWeatherDataToSerialMonitor(WeatherData& weatherData)
                 LoRa.rssi());
 }
 
-void onReceive(int packetSize) {
+void onCadDone(boolean signalDetected) {
+  // detect preamble
+  if (signalDetected) {
+    Serial.println("Signal detected");
+    LoRa.receive(); // put the radio into continuous receive mode
+  } else {
+    LoRa.channelActivityDetection();
+  }
+}
+
+void onReceive(int packetSize)
+{
   is_packet_received = true;
+  LoRa.channelActivityDetection();
 }
