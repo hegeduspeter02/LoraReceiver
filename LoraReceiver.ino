@@ -47,6 +47,7 @@ void loop()
   if(is_packet_received) {
     is_packet_received = false; 
     String message = readPacket();
+    LoRa.channelActivityDetection();
 
     // create a JSON document
     DynamicJsonDocument jsonBuffer(4096);
@@ -63,7 +64,6 @@ void loop()
 
     // esp_light_sleep_start();
 
-    LoRa.channelActivityDetection();
     esp_task_wdt_reset(); // reset the wdt
   }
 }

@@ -113,5 +113,4 @@ void onCadDone(boolean signalDetected) {
 void onReceive(int packetSize)
 {
   is_packet_received = true;
-  LoRa.sleep();
 }
