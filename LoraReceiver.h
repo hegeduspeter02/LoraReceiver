@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <LoRa.h>
-#include "rtc_wdt.h"
 #include <esp_task_wdt.h>
 #include <ArduinoJson.h>
 #include <CayenneLPP.h>

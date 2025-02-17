@@ -1,8 +1,4 @@
-#include "FunctionalInterrupt.h"
-#include "esp_attr.h"
-#include <stdint.h>
 #include <LoraReceiver.h>
-#include <esp_task_wdt.h>
 
 volatile bool is_packet_received = false;
 
@@ -111,6 +107,12 @@ void onCadDone(boolean signalDetected) {
 
 void onReceive(int packetSize)
 {
+  Serial.printf("Received packet, size: %d/n", packetSize);
+
+  for (int i = 0; i < packetSize; i++) {
+    Serial.print((char)LoRa.read());
+  }
+
   is_packet_received = true;
   LoRa.channelActivityDetection();
 }
