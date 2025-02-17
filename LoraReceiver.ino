@@ -37,10 +37,12 @@ void setup()
   LoRa.onReceive(onReceive); // register receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
+  /*
   gpio_wakeup_enable((gpio_num_t) RFM95_DIO0_PIN, (gpio_int_type_t) GPIO_INTR_POSEDGE);
   esp_sleep_enable_gpio_wakeup();
 
   esp_light_sleep_start();
+  */
 }
 
 void loop()
@@ -62,7 +64,7 @@ void loop()
         printWeatherDataToSerialMonitor(weatherData);
     #endif
 
-    esp_light_sleep_start();
+    // esp_light_sleep_start();
 
     //esp_task_wdt_reset(); // Reset the wdt
   }
