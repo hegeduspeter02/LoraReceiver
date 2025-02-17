@@ -6,18 +6,15 @@ String JSONPacket;
 
 void setup()
 {
-  /*esp_task_wdt_deinit();  // This will stop and clear the previously initialized TWDT
-
-  // Configure and reinitialize the TWDT
+  // configure the watchdog timer
   esp_task_wdt_config_t twdt_config = {
-      .timeout_ms = 10000,       // 10 seconds timeout
-      .idle_core_mask = 1 << 0,   // Monitor idle task on core 0 only
-      .trigger_panic = false     // Continue running if timeout happens(don't reset)
+      .timeout_ms = 120 * mS_TO_S_FACTOR,
+      .idle_core_mask = 1 << 0,   // monitor idle task on core 0 only
+      .trigger_panic = false     // continue running if timeout happens(don't reset)
   };
 
   esp_task_wdt_init(&twdt_config);
-
-  esp_task_wdt_add(NULL); // subscribe the current running task to the wdt*/
+  esp_task_wdt_add(NULL); // subscribe the current running task to the wdt
 
   initializeSerialCommunication();
 
@@ -66,6 +63,6 @@ void loop()
 
     // esp_light_sleep_start();
 
-    //esp_task_wdt_reset(); // Reset the wdt
+    esp_task_wdt_reset(); // reset the wdt
   }
 }

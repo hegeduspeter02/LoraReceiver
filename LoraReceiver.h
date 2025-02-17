@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <LoRa.h>
+#include "rtc_wdt.h"
 #include <esp_task_wdt.h>
 #include <ArduinoJson.h>
 #include <CayenneLPP.h>
@@ -11,17 +12,17 @@
 #define DEBUG_MODE 1
 #endif
 
+#define mS_TO_S_FACTOR 1000 // us
 #define SERIAL_BAUD 9600 // bps
+#define MAX_PAYLOAD_SIZE 51 // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26
-
 #define SPI_CS0_PIN 5
 #define SPI_SCLK_PIN 18
 #define SPI_MISO_PIN 19
 #define SPI_MOSI_PIN 23
 
-#define MAX_PAYLOAD_SIZE 51 // bytes
 #define BME_280_SENSOR_IDENTIFIER 1
 #define UV_SENSOR_IDENTIFIER 2
 #define SOIL_MOISTURE_SENSOR_IDENTIFIER 3
