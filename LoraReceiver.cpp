@@ -17,11 +17,16 @@ void configureGPIO()
 
 String readPacket()
 {
+  int availableBytes = LoRa.available()
+  Serial.printf("Available bytes: %d", availableBytes);
+
   String message;
 
   while (LoRa.available()) {
     message += ((char)LoRa.read());
   }
+
+  Serial.printf("Message: %s", message);
 
   return message;
 }
