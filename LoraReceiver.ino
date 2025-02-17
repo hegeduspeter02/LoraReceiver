@@ -6,6 +6,8 @@ String JSONPacket;
 
 void setup()
 {
+  esp_task_wdt_deinit();
+
   // configure the watchdog timer
   esp_task_wdt_config_t twdt_config = {
       .timeout_ms = 120 * mS_TO_S_FACTOR,
