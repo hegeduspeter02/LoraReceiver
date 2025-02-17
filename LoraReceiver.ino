@@ -6,12 +6,10 @@ String JSONPacket;
 
 void setup()
 {
-  esp_task_wdt_deinit();
-
   // configure the watchdog timer
   esp_task_wdt_config_t twdt_config = {
       .timeout_ms = 120 * mS_TO_S_FACTOR,
-      .idle_core_mask = 1 << 0,   // monitor idle task on core 0 only
+      .idle_core_mask = (1 << 0) | (1 << 1),   // monitor idle task on both core 0 and 1
       .trigger_panic = false     // continue running if timeout happens(don't reset)
   };
 
