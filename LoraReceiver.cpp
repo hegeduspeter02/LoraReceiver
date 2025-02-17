@@ -17,7 +17,7 @@ void configureGPIO()
 
 String readPacket()
 {
-  int availableBytes = LoRa.available()
+  int availableBytes = LoRa.available();
   Serial.printf("Available bytes: %d", availableBytes);
 
   String message;
