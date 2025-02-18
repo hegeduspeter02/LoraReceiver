@@ -1,6 +1,7 @@
 #include <LoraReceiver.h>
 
 volatile bool is_packet_received = false;
+String receivedMessage;
 
 void initializeSerialCommunication()
 {
@@ -13,22 +14,6 @@ void configureGPIO()
 {
   pinMode(RFM95_RESET_PIN, OUTPUT);
   pinMode(RFM95_DIO0_PIN, INPUT);
-}
-
-String readPacket()
-{
-  int availableBytes = LoRa.available();
-  Serial.printf("Available bytes: %d", availableBytes);
-
-  String message;
-
-  while (LoRa.available()) {
-    message += ((char)LoRa.read());
-  }
-
-  Serial.printf("Message: %s", message);
-
-  return message;
 }
 
 void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize)
@@ -112,5 +97,18 @@ void onCadDone(boolean signalDetected) {
 
 void onReceive(int packetSize)
 {
+  receivedMessage = "";
+
+  for (int i = 0; i < packetSize; i++) {
+    receivedMessage += ((char)LoRa.read());
+  }
+
+  Serial.printf("Message: %s", receivedMessage);
+
+  LoRa.channelActivityDetection();
   is_packet_received = true;
+}
+
+String getReceivedMessage() {
+  return receivedMessage;
 }

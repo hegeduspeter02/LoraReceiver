@@ -31,6 +31,7 @@
 /* GLOBAL VARIABLES                                              */
 /*****************************************************************/
 extern volatile bool is_packet_received;
+extern String receivedMessage;
 
 /*****************************************************************/
 /* STRUCTURES                                                    */
@@ -62,10 +63,6 @@ void configureGPIO();
 /* WORKER FUNCTIONS                                              */
 /*****************************************************************/
 
-  ///////////////////////////////////////////////////////////////
-  /// Read the message in the packet.
-String readPacket();
-
 void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize);
 
   ///////////////////////////////////////////////////////////////
@@ -84,3 +81,7 @@ void onCadDone(boolean signalDetected);
   ///////////////////////////////////////////////////////////////
   /// Callback function called when packet is received.
 void onReceive(int packetSize);
+
+  ///////////////////////////////////////////////////////////////
+  /// Get the last received packet's content.
+String getReceivedMessage();  

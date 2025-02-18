@@ -45,15 +45,13 @@ void setup()
 void loop()
 {
   if(is_packet_received) {
-    is_packet_received = false; 
-    String message = readPacket();
-    LoRa.channelActivityDetection();
+    is_packet_received = false;
 
     // create a JSON document
     DynamicJsonDocument jsonBuffer(4096);
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
-    decodePacketToJsonArray(message, JSONArrayPacket);
+    decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
     serializeJson(JSONArrayPacket, JSONPacket);
 
     parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
