@@ -97,17 +97,16 @@ void onCadDone(boolean signalDetected) {
 
 void onReceive(int packetSize)
 {
-  memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
-
-  Serial.printf("Packet size: %d\n", packetSize);
+  //memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
 
   for (int i = 0; i < MAX_PAYLOAD_SIZE; i++) {
-    receivedMessage[i] += ((char)LoRa.read());
+    Serial.print((char)LoRa.read());
+    //receivedMessage[i] += ((char)LoRa.read());
   }
 
-  receivedMessage[MAX_PAYLOAD_SIZE] = '\0';
+  //receivedMessage[MAX_PAYLOAD_SIZE] = '\0';
 
-  Serial.printf("Message: %s\n", receivedMessage);
+  //Serial.printf("Message: %s\n", receivedMessage);
 
   LoRa.channelActivityDetection();
   is_packet_received = true;
