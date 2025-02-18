@@ -1,7 +1,7 @@
 #include <LoraReceiver.h>
 
 volatile bool is_packet_received = false;
-String receivedMessage = "";
+char receivedMessage[MAX_PAYLOAD_SIZE + 1];
 
 void initializeSerialCommunication()
 {
@@ -97,12 +97,15 @@ void onCadDone(boolean signalDetected) {
 
 void onReceive(int packetSize)
 {
-  receivedMessage = "";
+  memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
+
   Serial.printf("Packet size: %d\n", packetSize);
 
-  for (int i = 0; i < packetSize; i++) {
-    receivedMessage += ((char)LoRa.read());
+  for (int i = 0; i < MAX_PAYLOAD_SIZE; i++) {
+    receivedMessage[i] += ((char)LoRa.read());
   }
+
+  receivedMessage[MAX_PAYLOAD_SIZE] = '\0';
 
   Serial.printf("Message: %s\n", receivedMessage);
 
@@ -111,5 +114,5 @@ void onReceive(int packetSize)
 }
 
 String getReceivedMessage() {
-  return receivedMessage;
+  return String(receivedMessage);
 }

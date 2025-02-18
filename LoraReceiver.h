@@ -13,7 +13,7 @@
 
 #define mS_TO_S_FACTOR 1000 // us
 #define SERIAL_BAUD 9600 // bps
-#define MAX_PAYLOAD_SIZE 51 // bytes
+#define MAX_PAYLOAD_SIZE 40 // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26
@@ -31,7 +31,7 @@
 /* GLOBAL VARIABLES                                              */
 /*****************************************************************/
 extern volatile bool is_packet_received;
-extern String receivedMessage;
+extern char receivedMessage[];
 
 /*****************************************************************/
 /* STRUCTURES                                                    */
