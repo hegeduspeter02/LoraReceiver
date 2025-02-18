@@ -10,7 +10,7 @@ void setup()
 
   // configure the watchdog timer
   esp_task_wdt_config_t twdt_config = {
-      .timeout_ms = 120 * mS_TO_S_FACTOR,
+      .timeout_ms = WDT_TIMEOUT_MS,
       .idle_core_mask = (1 << 0) | (1 << 1),   // monitor idle task on core 0 and 1
       .trigger_panic = true     // reset if timout happens
   };
@@ -36,7 +36,7 @@ void setup()
   LoRa.onReceive(onReceive); // register receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
-  esp_sleep_enable_timer_wakeup(RFM95_SEND_RATE * uS_TO_S_FACTOR * SLEEP_TIME_FACTOR);
+  esp_sleep_enable_timer_wakeup(ESP_WAKE_UP_PERIOD_US);
 }
 
 void loop()

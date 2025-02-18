@@ -101,7 +101,7 @@ void onReceive(int packetSize)
 
   receivedMessage[PAYLOAD_SIZE] = '\0';
 
-  LoRa.end();
+  LoRa.end(); // put the radio into sleep mode & stop SPI connection
   is_packet_received = true;
 }
 
