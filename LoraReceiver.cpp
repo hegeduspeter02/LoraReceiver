@@ -93,8 +93,8 @@ void onCadDone(boolean signalDetected) {
     Serial.println("Signal detected");
     LoRa.receive(); // put the radio into continuous receive mode
   } else {
-    LoRa.channelActivityDetection();*/
-  }
+    LoRa.channelActivityDetection();
+  }*/
 }
 
 void onReceive(int packetSize)
