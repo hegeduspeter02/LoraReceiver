@@ -48,16 +48,16 @@ void loop()
     is_packet_received = false;
 
     // create a JSON document
-    DynamicJsonDocument jsonBuffer(4096);
-    JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
+    //DynamicJsonDocument jsonBuffer(4096);
+    //JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
-    decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
-    serializeJson(JSONArrayPacket, JSONPacket);
+    //decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
+    //serializeJson(JSONArrayPacket, JSONPacket);
 
-    parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
+    //parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
 
     #if DEBUG_MODE
-        printWeatherDataToSerialMonitor(weatherData);
+        //printWeatherDataToSerialMonitor(weatherData);
     #endif
 
     // esp_light_sleep_start();
