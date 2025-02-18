@@ -7,7 +7,7 @@ void initializeSerialCommunication()
 {
   Serial.begin(SERIAL_BAUD);
   while(!Serial) {} // wait until the serial port is ready and connected
-  delay(1000); // wait for Serial Monitor to initialize
+  delay(10); // wait for Serial Monitor to initialize
 }
 
 void configureGPIO()
@@ -83,7 +83,7 @@ void printWeatherDataToSerialMonitor(WeatherData& weatherData)
                 weatherData.soilMoisture,
                 weatherData.rainPercent,
                 LoRa.rssi());
-  delay(100); // Small delay to prevent buffer overflow
+  Serial.flush();
 }
 
 void onCadDone(boolean signalDetected)
@@ -106,7 +106,7 @@ void onReceive(int packetSize)
 
   receivedMessage[PAYLOAD_SIZE] = '\0';
 
-  LoRa.end(); // put the radio into sleep mode & stop SPI connection
+  LoRa.end(); // put the radio into sleep mode & disable spi bus
   is_packet_received = true;
 }
 
