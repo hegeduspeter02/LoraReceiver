@@ -83,6 +83,7 @@ void printWeatherDataToSerialMonitor(WeatherData& weatherData)
                 weatherData.soilMoisture,
                 weatherData.rainPercent,
                 LoRa.rssi());
+  delay(100); // Small delay to prevent buffer overflow
 }
 
 void onCadDone(boolean signalDetected)

@@ -57,7 +57,7 @@ void loop()
         printWeatherDataToSerialMonitor(weatherData);
     #endif
 
-    esp_light_sleep_start();
     esp_task_wdt_reset(); // reset the wdt
+    esp_light_sleep_start();
   }
 }
