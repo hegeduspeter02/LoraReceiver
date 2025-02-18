@@ -12,6 +12,7 @@
 #endif
 
 #define mS_TO_S_FACTOR 1000 // us
+#define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 9600 // bps
 #define RFM95_SEND_RATE 5 // s
 #define SLEEP_TIME_FACTOR 0.9f
