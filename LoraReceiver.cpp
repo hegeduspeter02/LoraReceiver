@@ -98,12 +98,13 @@ void onCadDone(boolean signalDetected) {
 void onReceive(int packetSize)
 {
   receivedMessage = "";
+  Serial.printf("Packet size: %d\n", packetSize);
 
   for (int i = 0; i < packetSize; i++) {
     receivedMessage += ((char)LoRa.read());
   }
 
-  Serial.printf("Message: %s", receivedMessage);
+  Serial.printf("Message: %s\n", receivedMessage);
 
   LoRa.channelActivityDetection();
   is_packet_received = true;
