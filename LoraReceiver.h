@@ -81,6 +81,8 @@ void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, W
   /// Prints the weatherData to the Serial Monitor.
 void printWeatherDataToSerialMonitor(WeatherData& weatherData);
 
+  ///////////////////////////////////////////////////////////////
+  /// Callback function called after channel activity was detected.
 void onCadDone(boolean signalDetected);
 
   ///////////////////////////////////////////////////////////////

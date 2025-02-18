@@ -33,7 +33,7 @@ void setup()
   }
 
   LoRa.onCadDone(onCadDone); // register channel activity detection callback
-  LoRa.onReceive(onReceive); // register receive callback
+  LoRa.onReceive(onReceive); // register packet receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
   esp_sleep_enable_timer_wakeup(ESP_WAKE_UP_PERIOD_US);
