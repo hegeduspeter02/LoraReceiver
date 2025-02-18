@@ -91,6 +91,9 @@ void onCadDone(boolean signalDetected)
   if (signalDetected) {
     LoRa.receive(); // put the radio into continuous receive mode
   }
+  else {
+    LoRa.channelActivityDetection(); // try next activity dectection
+  }
 }
 
 void onReceive(int packetSize)
