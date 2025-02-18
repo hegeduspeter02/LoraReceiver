@@ -100,8 +100,6 @@ void onReceive(int packetSize)
 
   receivedMessage[MAX_PAYLOAD_SIZE] = '\0';
 
-  Serial.printf("Message: %s\n", receivedMessage);
-
   LoRa.begin(868E6); // reset library
   LoRa.channelActivityDetection();
   is_packet_received = true;
