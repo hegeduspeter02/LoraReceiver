@@ -6,17 +6,17 @@ String JSONPacket;
 
 void setup()
 {
-  esp_task_wdt_deinit();
+  esp_task_wdt_deinit(); // stop and clear the previously initialized TWDT
 
   // configure the watchdog timer
   esp_task_wdt_config_t twdt_config = {
-      .timeout_ms = WDT_TIMEOUT_MS,
-      .idle_core_mask = (1 << 0) | (1 << 1),   // monitor idle task on core 0 and 1
-      .trigger_panic = true     // reset if timout happens
+      .timeout_ms = TWDT_TIMEOUT_MS,
+      .idle_core_mask = (1 << 0) | (1 << 1), // monitor idle task on core 0 and 1
+      .trigger_panic = true // reset if timeout happens
   };
 
   esp_task_wdt_init(&twdt_config);
-  esp_task_wdt_add(NULL); // subscribe the current running task to the wdt
+  esp_task_wdt_add(NULL); // subscribe the current running task to the twdt
 
   initializeSerialCommunication();
 
@@ -57,7 +57,7 @@ void loop()
         printWeatherDataToSerialMonitor(weatherData);
     #endif
 
-    esp_task_wdt_reset(); // reset the wdt
+    esp_task_wdt_reset(); // reset the twdt
     esp_light_sleep_start();
 
     // after wakeup
