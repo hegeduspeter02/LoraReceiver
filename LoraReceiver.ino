@@ -11,8 +11,8 @@ void setup()
   // configure the watchdog timer
   esp_task_wdt_config_t twdt_config = {
       .timeout_ms = 120 * mS_TO_S_FACTOR,
-      .idle_core_mask = (1 << 0) | (1 << 1),   // monitor idle task on core 0 only
-      .trigger_panic = true     // continue running if timeout happens(don't reset)
+      .idle_core_mask = (1 << 0) | (1 << 1),   // monitor idle task on core 0 and 1
+      .trigger_panic = true     // reset if timout happens
   };
 
   esp_task_wdt_init(&twdt_config);
@@ -36,12 +36,7 @@ void setup()
   LoRa.onReceive(onReceive); // register receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
-  /*
-  gpio_wakeup_enable((gpio_num_t) RFM95_DIO0_PIN, (gpio_int_type_t) GPIO_INTR_POSEDGE);
-  esp_sleep_enable_gpio_wakeup();
-
-  esp_light_sleep_start();
-  */
+  esp_sleep_enable_timer_wakeup(RFM95_SEND_RATE * uS_TO_S_FACTOR * SLEEP_TIME_FACTOR);
 }
 
 void loop()
@@ -62,8 +57,7 @@ void loop()
         printWeatherDataToSerialMonitor(weatherData);
     #endif
 
-    // esp_light_sleep_start();
-
+    esp_light_sleep_start();
     esp_task_wdt_reset(); // reset the wdt
   }
 }

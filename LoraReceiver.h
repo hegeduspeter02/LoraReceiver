@@ -13,7 +13,9 @@
 
 #define mS_TO_S_FACTOR 1000 // us
 #define SERIAL_BAUD 9600 // bps
-#define MAX_PAYLOAD_SIZE 40 // bytes
+#define RFM95_SEND_RATE 5 // s
+#define SLEEP_TIME_FACTOR 0.9f
+#define PAYLOAD_SIZE 40 // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26

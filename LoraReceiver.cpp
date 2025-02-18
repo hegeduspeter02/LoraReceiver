@@ -1,7 +1,7 @@
 #include <LoraReceiver.h>
 
 volatile bool is_packet_received = false;
-char receivedMessage[MAX_PAYLOAD_SIZE + 1];
+char receivedMessage[PAYLOAD_SIZE + 1];
 
 void initializeSerialCommunication()
 {
@@ -26,12 +26,12 @@ void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, si
 
 void decodePacketToJsonArray(const String& hexString, JsonArray& JSONArrayPacket)
 {
-  uint8_t buffer[MAX_PAYLOAD_SIZE];
+  uint8_t buffer[PAYLOAD_SIZE];
   size_t bufferSize;
 
   convertHexStringToByteArray(hexString, buffer, bufferSize);
 
-  CayenneLPP lpp(MAX_PAYLOAD_SIZE);
+  CayenneLPP lpp(PAYLOAD_SIZE);
   lpp.decode(buffer, bufferSize, JSONArrayPacket);
 }
 
@@ -94,11 +94,11 @@ void onReceive(int packetSize)
 {
   memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
 
-  for (int i = 0; i < MAX_PAYLOAD_SIZE; i++) {
+  for (int i = 0; i < PAYLOAD_SIZE; i++) {
     receivedMessage[i] = ((char)LoRa.read());
   }
 
-  receivedMessage[MAX_PAYLOAD_SIZE] = '\0';
+  receivedMessage[PAYLOAD_SIZE] = '\0';
 
   LoRa.begin(868E6); // reset library
   LoRa.channelActivityDetection();
