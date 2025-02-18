@@ -59,5 +59,9 @@ void loop()
 
     esp_task_wdt_reset(); // reset the wdt
     esp_light_sleep_start();
+
+    // after wakeup
+    LoRa.begin(868E6); // reset library
+    LoRa.channelActivityDetection();
   }
 }

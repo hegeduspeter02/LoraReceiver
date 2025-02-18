@@ -101,8 +101,7 @@ void onReceive(int packetSize)
 
   receivedMessage[PAYLOAD_SIZE] = '\0';
 
-  LoRa.begin(868E6); // reset library
-  LoRa.channelActivityDetection();
+  LoRa.end();
   is_packet_received = true;
 }
 
