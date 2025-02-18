@@ -102,6 +102,7 @@ void onReceive(int packetSize)
 
   Serial.printf("Message: %s\n", receivedMessage);
 
+  LoRa.begin(868E6);
   LoRa.channelActivityDetection();
   is_packet_received = true;
 }
