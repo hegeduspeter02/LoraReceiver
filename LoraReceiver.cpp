@@ -85,16 +85,9 @@ void printWeatherDataToSerialMonitor(WeatherData& weatherData)
                 LoRa.rssi());
 }
 
-void onCadDone(boolean signalDetected) {
-  LoRa.receive();
-  /*
-  // detect preamble
-  if (signalDetected) {
-    Serial.println("Signal detected");
-    LoRa.receive(); // put the radio into continuous receive mode
-  } else {
-    LoRa.channelActivityDetection();
-  }*/
+void onCadDone(boolean signalDetected)
+{
+  LoRa.receive(); // put the radio into continuous receive mode
 }
 
 void onReceive(int packetSize)
@@ -109,7 +102,7 @@ void onReceive(int packetSize)
 
   Serial.printf("Message: %s\n", receivedMessage);
 
-  //LoRa.channelActivityDetection();
+  LoRa.channelActivityDetection();
   is_packet_received = true;
 }
 
