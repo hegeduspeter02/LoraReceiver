@@ -1,7 +1,7 @@
 #include <LoraReceiver.h>
 
 volatile bool is_packet_received = false;
-String receivedMessage;
+String receivedMessage = "";
 
 void initializeSerialCommunication()
 {
