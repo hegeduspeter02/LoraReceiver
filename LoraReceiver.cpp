@@ -101,10 +101,11 @@ void onReceive(int packetSize)
   Serial.printf("Packet size: %d\n", packetSize);
 
   for (int i = 0; i < packetSize; i++) {
-    receivedMessage += ((char)LoRa.read());
+    Serial.print((char)LoRa.read());
+    //receivedMessage += ((char)LoRa.read());
   }
 
-  Serial.printf("Message: %s\n", receivedMessage);
+  //Serial.printf("Message: %s\n", receivedMessage);
 
   LoRa.channelActivityDetection();
   is_packet_received = true;
