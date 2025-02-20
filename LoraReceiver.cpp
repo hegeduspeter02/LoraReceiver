@@ -7,13 +7,24 @@ void initializeSerialCommunication()
 {
   Serial.begin(SERIAL_BAUD);
   while(!Serial) {} // wait until the serial port is ready and connected
-  delay(10); // wait for Serial Monitor to initialize
+  delay(100); // wait for Serial Monitor to initialize
 }
 
 void configureGPIO()
 {
   pinMode(RFM95_RESET_PIN, OUTPUT);
   pinMode(RFM95_DIO0_PIN, INPUT);
+}
+
+void connectToWifi(const char* ssid, const char* password)
+{ 
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi");
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\nWiFi connected");
 }
 
 void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize)

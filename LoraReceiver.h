@@ -1,8 +1,10 @@
 #include <Arduino.h>
 #include <LoRa.h>
-#include <esp_task_wdt.h>
 #include <ArduinoJson.h>
 #include <CayenneLPP.h>
+#include <esp_task_wdt.h>
+#include <WiFi.h>
+#include <HTTPClient.h>
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -13,8 +15,8 @@
 
 #define mS_TO_S_FACTOR 1000 // us
 #define uS_TO_S_FACTOR 1000000 // us
-#define SERIAL_BAUD 9600 // bps
-#define RFM95_SEND_RATE 60 // s
+#define SERIAL_BAUD 115200 // bps
+#define RFM95_SEND_RATE 10 // s
 #define SLEEP_TIME_FACTOR 0.9f
 #define TWDT_TIMEOUT_MS (2 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
@@ -63,6 +65,10 @@ void initializeSerialCommunication();
   ///////////////////////////////////////////////////////////////
   /// Configure the ESP32's pins.
 void configureGPIO();
+
+  ///////////////////////////////////////////////////////////////
+  /// Connect to a WiFi network with given ssid and password.
+void connectToWifi(const char* ssid, const char* password);
 
 /*****************************************************************/
 /* WORKER FUNCTIONS                                              */

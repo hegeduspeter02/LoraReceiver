@@ -1,24 +1,16 @@
 #include <LoraReceiver.h>
 #include <SPI.h>
+#include "config.h"
 
 WeatherData weatherData;
 String JSONPacket;
 
 void setup()
 {
-  esp_task_wdt_deinit(); // stop and clear the previously initialized TWDT
-
-  // configure the watchdog timer
-  esp_task_wdt_config_t twdt_config = {
-      .timeout_ms = TWDT_TIMEOUT_MS,
-      .idle_core_mask = (1 << 0) | (1 << 1), // monitor idle task on core 0 and 1
-      .trigger_panic = true // reset if timeout happens
-  };
-
-  esp_task_wdt_init(&twdt_config);
-  esp_task_wdt_add(NULL); // subscribe the current running task to the twdt
-
   initializeSerialCommunication();
+
+  WiFi.mode(WIFI_MODE_STA);
+  connectToWifi(ssid, password);
 
   SPIClass spi;
   spi.begin(SPI_SCLK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN, SPI_CS0_PIN); // set SPI pins
@@ -54,14 +46,16 @@ void loop()
     parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
 
     #if DEBUG_MODE
-        printWeatherDataToSerialMonitor(weatherData);
+      printWeatherDataToSerialMonitor(weatherData);
     #endif
 
-    esp_task_wdt_reset(); // reset the twdt
+    //WiFi.disconnect(true);
+
     esp_light_sleep_start();
 
     // after wakeup
     LoRa.begin(868E6); // reset library
     LoRa.channelActivityDetection();
+    //connectToWifi(ssid, password);
   }
 }
