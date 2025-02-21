@@ -18,13 +18,19 @@ void configureGPIO()
 
 void connectToWifi(const char* ssid, const char* password)
 { 
+  WiFi.mode(WIFI_MODE_STA);
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi");
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  Serial.println("\nWiFi connected");
+ 
+  #if DEBUG_MODE
+    Serial.print("Connecting to WiFi");
+    while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+    }
+    Serial.println("\nWiFi connected");
+  #else
+    while (WiFi.status() != WL_CONNECTED);
+  #endif
 }
 
 void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize)

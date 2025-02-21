@@ -8,8 +8,9 @@ String JSONPacket;
 void setup()
 {
   initializeSerialCommunication();
+  
+  setCpuFrequencyMhz(80); // MHz
 
-  WiFi.mode(WIFI_MODE_STA);
   connectToWifi(ssid, password);
 
   SPIClass spi;
@@ -49,13 +50,15 @@ void loop()
       printWeatherDataToSerialMonitor(weatherData);
     #endif
 
-    //WiFi.disconnect(true);
+    // disconnect from network and turn the radio off
+    WiFi.disconnect(true);
 
     esp_light_sleep_start();
 
     // after wakeup
+    connectToWifi(ssid, password);
+
     LoRa.begin(868E6); // reset library
     LoRa.channelActivityDetection();
-    //connectToWifi(ssid, password);
   }
 }

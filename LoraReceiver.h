@@ -2,9 +2,9 @@
 #include <LoRa.h>
 #include <ArduinoJson.h>
 #include <CayenneLPP.h>
-#include <esp_task_wdt.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include "esp_bt.h"
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -17,7 +17,7 @@
 #define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 115200 // bps
 #define RFM95_SEND_RATE 10 // s
-#define SLEEP_TIME_FACTOR 0.9f
+#define SLEEP_TIME_FACTOR 0.5f
 #define TWDT_TIMEOUT_MS (2 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
 #define PAYLOAD_SIZE 40 // bytes
