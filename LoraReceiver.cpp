@@ -2,6 +2,7 @@
 
 volatile bool is_packet_received = false;
 char receivedMessage[PAYLOAD_SIZE + 1];
+volatile int16_t packetRSSI = 0;
 
 void initializeSerialCommunication()
 {
@@ -99,7 +100,7 @@ void printWeatherDataToSerialMonitor(WeatherData& weatherData)
                 weatherData.uvIndex,
                 weatherData.soilMoisture,
                 weatherData.rainPercent,
-                LoRa.rssi());
+                packetRSSI);
   Serial.flush();
 }
 
@@ -122,6 +123,7 @@ void onReceive(int packetSize)
   }
 
   receivedMessage[PAYLOAD_SIZE] = '\0';
+  packetRSSI = LoRa.rssi();
 
   LoRa.end(); // put the radio into sleep mode & disable spi bus
   is_packet_received = true;
@@ -129,4 +131,23 @@ void onReceive(int packetSize)
 
 String getReceivedMessage() {
   return String(receivedMessage);
+}
+
+void endLibraries()
+{
+  LoRa.end();
+  WiFi.disconnect(true);
+  Serial.end();
+}
+
+void handleInactivity(unsigned long& lastActivityTime)
+{
+  if (millis() - lastActivityTime > INACTIVITY_THRESHOLD) {
+    endLibraries();
+
+    esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
+    esp_deep_sleep_start();
+  }
+
+  return;
 }

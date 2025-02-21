@@ -4,6 +4,7 @@
 
 WeatherData weatherData;
 String JSONPacket;
+unsigned long lastActivityTime = 0;
 
 void setup()
 {
@@ -13,14 +14,14 @@ void setup()
 
   connectToWifi(ssid, password);
 
-  SPIClass spi;
-  spi.begin(SPI_SCLK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN, SPI_CS0_PIN); // set SPI pins
-
   configureGPIO();
+
+  SPI.begin(SPI_SCLK_PIN, SPI_MISO_PIN, SPI_MOSI_PIN, SPI_CS0_PIN); // set SPI pins
+  LoRa.setSPI(SPI);
   
   LoRa.setPins(SPI_CS0_PIN, RFM95_RESET_PIN, RFM95_DIO0_PIN);
 
-  if (!LoRa.begin(868E6)) {
+  if (!LoRa.begin(RFM95_COMM_FREQ)) {
     Serial.println("Starting LoRa failed!");
     while (1);
   }
@@ -30,12 +31,16 @@ void setup()
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
   esp_sleep_enable_timer_wakeup(ESP_WAKE_UP_PERIOD_US);
+
+  lastActivityTime = millis(); // now
 }
 
 void loop()
 {
   if(is_packet_received) {
     is_packet_received = false;
+
+    lastActivityTime = millis();
 
     // create a JSON document
     DynamicJsonDocument jsonBuffer(4096);
@@ -58,7 +63,9 @@ void loop()
     // after wakeup
     connectToWifi(ssid, password);
 
-    LoRa.begin(868E6); // reset library
+    LoRa.begin(RFM95_COMM_FREQ); // reset library
     LoRa.channelActivityDetection();
   }
+
+  handleInactivity(lastActivityTime);
 }

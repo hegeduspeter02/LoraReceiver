@@ -1,10 +1,9 @@
 #include <Arduino.h>
 #include <LoRa.h>
-#include <ArduinoJson.h>
-#include <CayenneLPP.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
-#include "esp_bt.h"
+#include <ArduinoJson.h>
+#include <CayenneLPP.h>
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -16,10 +15,12 @@
 #define mS_TO_S_FACTOR 1000 // us
 #define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 115200 // bps
+#define RFM95_COMM_FREQ 868E6
 #define RFM95_SEND_RATE 10 // s
 #define SLEEP_TIME_FACTOR 0.5f
 #define TWDT_TIMEOUT_MS (2 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
+#define INACTIVITY_THRESHOLD (5 * RFM95_SEND_RATE)
 #define PAYLOAD_SIZE 40 // bytes
 
 #define RFM95_RESET_PIN 25
@@ -39,6 +40,7 @@
 /*****************************************************************/
 extern volatile bool is_packet_received;
 extern char receivedMessage[];
+extern volatile int16_t packetRSSI;
 
 /*****************************************************************/
 /* STRUCTURES                                                    */
@@ -97,4 +99,12 @@ void onReceive(int packetSize);
 
   ///////////////////////////////////////////////////////////////
   /// Get the last received packet's content.
-String getReceivedMessage();  
+String getReceivedMessage();
+
+  ///////////////////////////////////////////////////////////////
+  /// Stop the used libraries.
+void endLibraries();
+
+  ///////////////////////////////////////////////////////////////
+  /// If not receiving packets, enter deep sleep until reset.
+void handleInactivity(unsigned long& lastActivityTime);
