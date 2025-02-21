@@ -135,14 +135,17 @@ String getReceivedMessage() {
 
 void endLibraries()
 {
-  LoRa.end();
+  LoRa.end(); // put the RFM95 in sleep mode & disable spi bus
   WiFi.disconnect(true);
-  Serial.end();
 }
 
 void handleInactivity(unsigned long& lastActivityTime)
 {
-  if (millis() - lastActivityTime > INACTIVITY_THRESHOLD) {
+  if (millis() - lastActivityTime > INACTIVITY_THRESHOLD_MS) {
+    #if DEBUG_MODE
+      Serial.println("Going to deep sleep.");
+    #endif
+    
     endLibraries();
 
     esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
