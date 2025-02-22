@@ -47,13 +47,13 @@ void loop()
 
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
 
-    serializeJson(JSONArrayPacket, JSONPacket);
-    sendPacketViaHTTPRequest(JSONPacket);
-
-    parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
     #if DEBUG_MODE
+      parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
       printWeatherDataToSerialMonitor(weatherData);
     #endif
+
+    serializeJson(JSONArrayPacket, JSONPacket);
+    sendPacketViaHTTPRequest(JSONPacket);
 
     // disconnect from network and turn the radio off
     WiFi.disconnect(true);
