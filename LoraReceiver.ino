@@ -1,6 +1,5 @@
 #include <LoraReceiver.h>
 #include <SPI.h>
-#include "config.h"
 
 WeatherData weatherData;
 String JSONPacket;
@@ -47,10 +46,11 @@ void loop()
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
+
     serializeJson(JSONArrayPacket, JSONPacket);
+    sendPacketViaHTTPRequest(JSONPacket);
 
     parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
-
     #if DEBUG_MODE
       printWeatherDataToSerialMonitor(weatherData);
     #endif

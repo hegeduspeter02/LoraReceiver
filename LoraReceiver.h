@@ -1,9 +1,8 @@
 #include <Arduino.h>
 #include <LoRa.h>
-#include <WiFi.h>
-#include <HTTPClient.h>
 #include <ArduinoJson.h>
-#include <CayenneLPP.h>
+#include "config.h"
+#include <WiFi.h>
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -81,6 +80,10 @@ void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, si
   /// Convert the received hexadecimal encoded Low Power Payload 
   /// string to JSON array.
 void decodePacketToJsonArray(const String& hexString, JsonArray& JSONArrayPacket);
+
+  ///////////////////////////////////////////////////////////////
+  /// Send the decoded JSON packet via HTTP POST request. 
+void sendPacketViaHTTPRequest(String& JSONPacket);
 
 void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, WeatherData& weatherData);
 

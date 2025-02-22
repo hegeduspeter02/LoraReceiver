@@ -1,4 +1,6 @@
 #include <LoraReceiver.h>
+#include <CayenneLPP.h>
+#include <HTTPClient.h>
 
 volatile bool is_packet_received = false;
 char receivedMessage[PAYLOAD_SIZE + 1];
@@ -34,6 +36,35 @@ void connectToWifi(const char* ssid, const char* password)
   #endif
 }
 
+void onCadDone(boolean signalDetected)
+{
+  if (signalDetected) {
+    LoRa.receive(); // put the radio into continuous receive mode
+  }
+  else {
+    LoRa.channelActivityDetection(); // try next activity dectection
+  }
+}
+
+void onReceive(int packetSize)
+{
+  memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
+
+  for (int i = 0; i < PAYLOAD_SIZE; i++) {
+    receivedMessage[i] = ((char)LoRa.read());
+  }
+
+  receivedMessage[PAYLOAD_SIZE] = '\0';
+  packetRSSI = LoRa.rssi();
+
+  LoRa.end(); // put the radio into sleep mode & disable spi bus
+  is_packet_received = true;
+}
+
+String getReceivedMessage() {
+  return String(receivedMessage);
+}
+
 void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize)
 {
   byteArraySize = hexString.length() / 2; // each byte is represented with two hex characters
@@ -51,6 +82,30 @@ void decodePacketToJsonArray(const String& hexString, JsonArray& JSONArrayPacket
 
   CayenneLPP lpp(PAYLOAD_SIZE);
   lpp.decode(buffer, bufferSize, JSONArrayPacket);
+}
+
+void sendPacketViaHTTPRequest(String& JSONPacket)
+{
+  if (WiFi.status() == WL_CONNECTED) {
+    HTTPClient http;
+    http.begin(serverUrl);
+    http.addHeader("Content-Type", "application/json");
+
+    int httpResponseCode = http.POST(JSONPacket); // send request
+
+    #if DEBUG_MODE
+      if (httpResponseCode > 0) {
+        String responseText = http.getString();
+        Serial.println("HTTP Response code: " + String(httpResponseCode));
+        Serial.println(responseText);
+      } else {
+        Serial.print("Error in sending request, code: ");
+        Serial.println(httpResponseCode);
+      }
+    #endif
+
+    http.end(); // free resources
+  }
 }
 
 void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, WeatherData& weatherData)
@@ -104,35 +159,6 @@ void printWeatherDataToSerialMonitor(WeatherData& weatherData)
   Serial.flush();
 }
 
-void onCadDone(boolean signalDetected)
-{
-  if (signalDetected) {
-    LoRa.receive(); // put the radio into continuous receive mode
-  }
-  else {
-    LoRa.channelActivityDetection(); // try next activity dectection
-  }
-}
-
-void onReceive(int packetSize)
-{
-  memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
-
-  for (int i = 0; i < PAYLOAD_SIZE; i++) {
-    receivedMessage[i] = ((char)LoRa.read());
-  }
-
-  receivedMessage[PAYLOAD_SIZE] = '\0';
-  packetRSSI = LoRa.rssi();
-
-  LoRa.end(); // put the radio into sleep mode & disable spi bus
-  is_packet_received = true;
-}
-
-String getReceivedMessage() {
-  return String(receivedMessage);
-}
-
 void endLibraries()
 {
   LoRa.end(); // put the RFM95 in sleep mode & disable spi bus
@@ -141,7 +167,7 @@ void endLibraries()
 
 void handleInactivity(unsigned long& lastActivityTime)
 {
-  if (millis() - lastActivityTime > INACTIVITY_THRESHOLD_MS) {
+  if ((millis() - lastActivityTime) > INACTIVITY_THRESHOLD_MS) {
     #if DEBUG_MODE
       Serial.println("Going to deep sleep.");
     #endif
@@ -151,6 +177,4 @@ void handleInactivity(unsigned long& lastActivityTime)
     esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
     esp_deep_sleep_start();
   }
-
-  return;
 }
