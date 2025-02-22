@@ -11,15 +11,16 @@
 #define DEBUG_MODE 1
 #endif
 
-#define mS_TO_S_FACTOR 1000 // us
+#define mS_TO_S_FACTOR 1000    // us
 #define uS_TO_S_FACTOR 1000000 // us
-#define SERIAL_BAUD 115200 // bps
+#define SERIAL_BAUD 115200     // bps
 #define RFM95_COMM_FREQ 868E6
 #define RFM95_SEND_RATE 60 // s
 #define SLEEP_TIME_FACTOR 0.8f
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
 #define INACTIVITY_THRESHOLD_MS (5 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
-#define PAYLOAD_SIZE 40 // bytes
+#define WIFI_CONNECTION_TIMEOUT_MS 10000 // ms
+#define PAYLOAD_SIZE 40                  // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26
@@ -43,7 +44,8 @@ extern volatile int16_t packetRSSI;
 /*****************************************************************/
 /* STRUCTURES                                                    */
 /*****************************************************************/
-struct WeatherData {
+struct WeatherData
+{
   float temperature;
   float humidity;
   float pressure;
@@ -57,56 +59,56 @@ struct WeatherData {
 /* INIT FUNCTIONS                                                */
 /*****************************************************************/
 
-  ///////////////////////////////////////////////////////////////
-  /// Start the Serial communication at SERIAL_BAUD rate.
-  /// Wait for the serial port and the Monitor to be ready.
+///////////////////////////////////////////////////////////////
+/// Start the Serial communication at SERIAL_BAUD rate.
+/// Wait for the serial port and the Monitor to be ready.
 void initializeSerialCommunication();
 
-  ///////////////////////////////////////////////////////////////
-  /// Configure the ESP32's pins.
+///////////////////////////////////////////////////////////////
+/// Configure the ESP32's pins.
 void configureGPIO();
 
-  ///////////////////////////////////////////////////////////////
-  /// Connect to a WiFi network with given ssid and password.
-void connectToWifi(const char* ssid, const char* password);
+///////////////////////////////////////////////////////////////
+/// Connect to a WiFi network with given ssid and password.
+void connectToWifi(const char *ssid, const char *password);
 
 /*****************************************************************/
 /* WORKER FUNCTIONS                                              */
 /*****************************************************************/
 
-void convertHexStringToByteArray(const String& hexString, uint8_t* byteArray, size_t& byteArraySize);
+void convertHexStringToByteArray(const String &hexString, uint8_t *byteArray, size_t &byteArraySize);
 
-  ///////////////////////////////////////////////////////////////
-  /// Convert the received hexadecimal encoded Low Power Payload 
-  /// string to JSON array.
-void decodePacketToJsonArray(const String& hexString, JsonArray& JSONArrayPacket);
+///////////////////////////////////////////////////////////////
+/// Convert the received hexadecimal encoded Low Power Payload
+/// string to JSON array.
+void decodePacketToJsonArray(const String &hexString, JsonArray &JSONArrayPacket);
 
-  ///////////////////////////////////////////////////////////////
-  /// Send the decoded JSON packet via HTTP POST request. 
-void sendPacketViaHTTPRequest(String& JSONPacket);
+///////////////////////////////////////////////////////////////
+/// Send the decoded JSON packet via HTTP POST request.
+void sendPacketViaHTTPRequest(String &JSONPacket);
 
-void parseJsonArrayPacketToWeatherDataStruct(const JsonArray& JSONArrayPacket, WeatherData& weatherData);
+void parseJsonArrayPacketToWeatherDataStruct(const JsonArray &JSONArrayPacket, WeatherData &weatherData);
 
-  ///////////////////////////////////////////////////////////////
-  /// Prints the weatherData to the Serial Monitor.
-void printWeatherDataToSerialMonitor(WeatherData& weatherData);
+///////////////////////////////////////////////////////////////
+/// Prints the weatherData to the Serial Monitor.
+void printWeatherDataToSerialMonitor(WeatherData &weatherData);
 
-  ///////////////////////////////////////////////////////////////
-  /// Callback function called after channel activity was detected.
+///////////////////////////////////////////////////////////////
+/// Callback function called after channel activity was detected.
 void onCadDone(boolean signalDetected);
 
-  ///////////////////////////////////////////////////////////////
-  /// Callback function called when packet is received.
+///////////////////////////////////////////////////////////////
+/// Callback function called when packet is received.
 void onReceive(int packetSize);
 
-  ///////////////////////////////////////////////////////////////
-  /// Get the last received packet's content.
+///////////////////////////////////////////////////////////////
+/// Get the last received packet's content.
 String getReceivedMessage();
 
-  ///////////////////////////////////////////////////////////////
-  /// Stop the used libraries.
+///////////////////////////////////////////////////////////////
+/// Stop the used libraries.
 void endLibraries();
 
-  ///////////////////////////////////////////////////////////////
-  /// If not receiving packets, enter deep sleep until reset.
-void handleInactivity(unsigned long& lastActivityTime);
+///////////////////////////////////////////////////////////////
+/// If not receiving packets, enter deep sleep until reset.
+void handleInactivity(unsigned long &lastActivityTime);
