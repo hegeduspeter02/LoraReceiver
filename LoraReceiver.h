@@ -110,5 +110,9 @@ String getReceivedMessage();
 void endLibraries();
 
 ///////////////////////////////////////////////////////////////
+/// Enter deep sleep mode until user reset.
+void enterDeepSleepForever();
+
+///////////////////////////////////////////////////////////////
 /// If not receiving packets, enter deep sleep until reset.
 void handleInactivity(unsigned long &lastActivityTime);
