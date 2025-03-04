@@ -20,7 +20,7 @@
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
 #define INACTIVITY_THRESHOLD_MS (5 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define WIFI_CONNECTION_TIMEOUT_MS 10000 // ms
-#define PAYLOAD_SIZE 40                  // bytes
+#define PAYLOAD_SIZE 23                  // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26
