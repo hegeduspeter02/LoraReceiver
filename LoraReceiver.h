@@ -29,10 +29,14 @@
 #define SPI_MISO_PIN 19
 #define SPI_MOSI_PIN 23
 
-#define BME_280_SENSOR_IDENTIFIER 1
-#define UV_SENSOR_IDENTIFIER 2
-#define SOIL_MOISTURE_SENSOR_IDENTIFIER 3
-#define RAIN_SENSOR_IDENTIFIER 4
+#define DEVICE_ID 0
+#define BME_280_TEMPERATURE_SENSOR_IDENTIFIER 0
+#define BME_280_HUMIDITY_SENSOR_IDENTIFIER 1
+#define BME_280_PRESSURE_SENSOR_IDENTIFIER 2
+#define UV_SENSOR_IDENTIFIER 3
+#define SOIL_MOISTURE_SENSOR_IDENTIFIER 4
+#define RAIN_SENSOR_IDENTIFIER 5
+#define BAT_LEVEL_IDENTIFIER 6
 
 /*****************************************************************/
 /* GLOBAL VARIABLES                                              */
@@ -44,7 +48,7 @@ extern volatile int16_t packetRSSI;
 /*****************************************************************/
 /* STRUCTURES                                                    */
 /*****************************************************************/
-struct WeatherData
+struct MeasureData
 {
   float temperature;
   float humidity;
@@ -52,7 +56,7 @@ struct WeatherData
   uint8_t uvIndex;
   uint8_t soilMoisture;
   uint8_t rainPercent;
-  int8_t packetRSSI;
+  uint8_t batLevel;
 };
 
 /*****************************************************************/
@@ -85,13 +89,17 @@ void decodePacketToJsonArray(const String &hexString, JsonArray &JSONArrayPacket
 
 ///////////////////////////////////////////////////////////////
 /// Send the decoded JSON packet via HTTP POST request.
-void sendPacketViaHTTPRequest(String &JSONPacket);
+void sendPayloadViaHTTPRequest(String &HTTPPayload);
 
-void parseJsonArrayPacketToWeatherDataStruct(const JsonArray &JSONArrayPacket, WeatherData &weatherData);
+void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, MeasureData &measureData);
 
 ///////////////////////////////////////////////////////////////
-/// Prints the weatherData to the Serial Monitor.
-void printWeatherDataToSerialMonitor(WeatherData &weatherData);
+/// Create a JSON string payload for the HTTP POST request.
+void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload);
+
+///////////////////////////////////////////////////////////////
+/// Prints the measureData to the Serial Monitor.
+void printMeasureDataToSerialMonitor(MeasureData &measureData);
 
 ///////////////////////////////////////////////////////////////
 /// Callback function called after channel activity was detected.

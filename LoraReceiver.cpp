@@ -107,7 +107,7 @@ void decodePacketToJsonArray(const String &hexString, JsonArray &JSONArrayPacket
   lpp.decode(buffer, bufferSize, JSONArrayPacket);
 }
 
-void sendPacketViaHTTPRequest(String &JSONPacket)
+void sendPayloadViaHTTPRequest(String &HTTPPayload)
 {
   if (WiFi.status() == WL_CONNECTED)
   {
@@ -115,7 +115,7 @@ void sendPacketViaHTTPRequest(String &JSONPacket)
     http.begin(serverUrl);
     http.addHeader("Content-Type", "application/json");
 
-    int httpResponseCode = http.POST(JSONPacket); // send request
+    int httpResponseCode = http.POST(HTTPPayload); // send request
 
 #if DEBUG_MODE
     if (httpResponseCode > 0)
@@ -135,44 +135,35 @@ void sendPacketViaHTTPRequest(String &JSONPacket)
   }
 }
 
-void parseJsonArrayPacketToWeatherDataStruct(const JsonArray &JSONArrayPacket, WeatherData &weatherData)
+void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, MeasureData &measureData)
 {
-  for (JsonObject obj : JSONArrayPacket)
-  {
-    String dataTypeName = obj["name"];
-    float value = obj["value"];
-
-    if (dataTypeName == "temperature")
-    {
-      weatherData.temperature = value;
-    }
-    else if (dataTypeName == "humidity")
-    {
-      weatherData.humidity = value;
-    }
-    else if (dataTypeName == "pressure")
-    {
-      weatherData.pressure = value;
-    }
-    else if (dataTypeName == "digital_out")
-    {
-      switch ((uint8_t)obj["channel"])
-      {
-      case UV_SENSOR_IDENTIFIER:
-        weatherData.uvIndex = (uint8_t)value;
-        break;
-      case SOIL_MOISTURE_SENSOR_IDENTIFIER:
-        weatherData.soilMoisture = (uint8_t)value;
-        break;
-      case RAIN_SENSOR_IDENTIFIER:
-        weatherData.rainPercent = (uint8_t)value;
-        break;
-      }
-    }
-  }
+  measureData.temperature = JSONArrayPacket[BME_280_TEMPERATURE_SENSOR_IDENTIFIER]["value"];
+  measureData.humidity = JSONArrayPacket[BME_280_HUMIDITY_SENSOR_IDENTIFIER]["value"];
+  measureData.pressure = JSONArrayPacket[BME_280_PRESSURE_SENSOR_IDENTIFIER]["value"];
+  measureData.uvIndex = JSONArrayPacket[UV_SENSOR_IDENTIFIER]["value"];
+  measureData.soilMoisture = JSONArrayPacket[SOIL_MOISTURE_SENSOR_IDENTIFIER]["value"];
+  measureData.rainPercent = JSONArrayPacket[RAIN_SENSOR_IDENTIFIER]["value"];
+  measureData.batLevel = JSONArrayPacket[BAT_LEVEL_IDENTIFIER]["value"];
 }
 
-void printWeatherDataToSerialMonitor(WeatherData &weatherData)
+void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload)
+{
+  JsonDocument doc;
+
+  doc["deviceId"] = DEVICE_ID;
+
+  JsonArray measurements = doc.createNestedArray("measurements");
+  for (JsonObject jsonPacket : JSONArrayPacket)
+  {
+    JsonObject measurement = measurements.createNestedObject();
+    measurement["sensorId"] = jsonPacket["channel"];
+    measurement["value"] = String(jsonPacket["value"]);
+  }
+
+  serializeJson(doc, HTTPPayload);
+}
+
+void printMeasureDataToSerialMonitor(MeasureData &measureData)
 {
   Serial.printf("Temp: %.1f °C\n"
                 "Humidity: %.1f%% RH\n"
@@ -181,14 +172,16 @@ void printWeatherDataToSerialMonitor(WeatherData &weatherData)
                 "Soil moisture: %d%%\n"
                 "Rain intensity: %d%%\n"
                 "With RSSI: %d dBm\n"
+                "Battery level: %d%%\n"
                 "---------------------------------------------------------\n",
-                weatherData.temperature,
-                weatherData.humidity,
-                weatherData.pressure,
-                weatherData.uvIndex,
-                weatherData.soilMoisture,
-                weatherData.rainPercent,
-                packetRSSI);
+                measureData.temperature,
+                measureData.humidity,
+                measureData.pressure,
+                measureData.uvIndex,
+                measureData.soilMoisture,
+                measureData.rainPercent,
+                packetRSSI,
+                measureData.batLevel);
   Serial.flush();
 }
 

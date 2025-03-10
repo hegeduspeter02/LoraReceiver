@@ -1,8 +1,8 @@
 #include <LoraReceiver.h>
 #include <SPI.h>
 
-WeatherData weatherData;
-String JSONPacket;
+MeasureData measureData;
+String HTTPPayload;
 unsigned long lastActivityTime = 0;
 
 void setup()
@@ -48,14 +48,14 @@ void loop()
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
+    parseJsonArrayPacketToMeasureDataStruct(JSONArrayPacket, measureData);
+    createPayloadForHTTPRequest(JSONArrayPacket, HTTPPayload);
 
 #if DEBUG_MODE
-    parseJsonArrayPacketToWeatherDataStruct(JSONArrayPacket, weatherData);
-    printWeatherDataToSerialMonitor(weatherData);
+    printMeasureDataToSerialMonitor(measureData);
 #endif
 
-    serializeJson(JSONArrayPacket, JSONPacket);
-    sendPacketViaHTTPRequest(JSONPacket);
+    sendPayloadViaHTTPRequest(HTTPPayload);
 
     // disconnect from network and turn the radio off
     WiFi.disconnect(true);
