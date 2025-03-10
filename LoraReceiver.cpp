@@ -28,29 +28,34 @@ void connectToWifi(const char *ssid, const char *password)
 
   unsigned long connectStartTime = millis();
 
-#if DEBUG_MODE
-  Serial.print("Connecting to WiFi");
-#endif
+  if (isDebugMode())
+  {
+    Serial.print("Connecting to WiFi");
+  }
+
   while (WiFi.status() != WL_CONNECTED && (millis() - connectStartTime) < WIFI_CONNECTION_TIMEOUT_MS)
   {
     delay(500);
-#if DEBUG_MODE
-    Serial.print(".");
-#endif
+    if (isDebugMode())
+    {
+      Serial.print(".");
+    }
   }
 
   if (WiFi.status() == WL_CONNECTED)
   {
-#if DEBUG_MODE
-    Serial.println("\nWiFi connected");
-#endif
+    if (isDebugMode())
+    {
+      Serial.println("\nWiFi connected");
+    }
   }
   else
   {
     enterDeepSleepForever();
-#if DEBUG_MODE
-    Serial.println("\nWiFi connection failed");
-#endif
+    if (isDebugMode())
+    {
+      Serial.println("\nWiFi connection failed");
+    }
   }
 }
 
@@ -117,19 +122,20 @@ void sendPayloadViaHTTPRequest(String &HTTPPayload)
 
     int httpResponseCode = http.POST(HTTPPayload); // send request
 
-#if DEBUG_MODE
-    if (httpResponseCode > 0)
+    if (isDebugMode())
     {
-      String responseText = http.getString();
-      Serial.println("HTTP Response code: " + String(httpResponseCode));
-      Serial.println(responseText);
+      if (httpResponseCode > 0)
+      {
+        String responseText = http.getString();
+        Serial.println("HTTP Response code: " + String(httpResponseCode));
+        Serial.println(responseText);
+      }
+      else
+      {
+        Serial.print("Error in sending request, code: ");
+        Serial.println(httpResponseCode);
+      }
     }
-    else
-    {
-      Serial.print("Error in sending request, code: ");
-      Serial.println(httpResponseCode);
-    }
-#endif
 
     http.end(); // free resources
   }
@@ -163,6 +169,11 @@ void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPP
   serializeJson(doc, HTTPPayload);
 }
 
+bool isDebugMode()
+{
+  return digitalRead(DEBUG_MODE_EN_PIN) == LOW;
+}
+
 void printMeasureDataToSerialMonitor(MeasureData &measureData)
 {
   Serial.printf("Temp: %.1f °C\n"
@@ -193,9 +204,10 @@ void endLibraries()
 
 void enterDeepSleepForever()
 {
-#if DEBUG_MODE
-  Serial.println("Going to deep sleep.");
-#endif
+  if (isDebugMode())
+  {
+    Serial.println("Going to deep sleep.");
+  }
 
   endLibraries();
   esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);

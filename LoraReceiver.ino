@@ -51,9 +51,10 @@ void loop()
     parseJsonArrayPacketToMeasureDataStruct(JSONArrayPacket, measureData);
     createPayloadForHTTPRequest(JSONArrayPacket, HTTPPayload);
 
-#if DEBUG_MODE
-    printMeasureDataToSerialMonitor(measureData);
-#endif
+    if (isDebugMode())
+    {
+      printMeasureDataToSerialMonitor(measureData);
+    }
 
     sendPayloadViaHTTPRequest(HTTPPayload);
 

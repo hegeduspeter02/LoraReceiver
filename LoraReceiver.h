@@ -7,10 +7,6 @@
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
 /*****************************************************************/
-#ifndef DEBUG_MODE
-#define DEBUG_MODE 1
-#endif
-
 #define mS_TO_S_FACTOR 1000    // us
 #define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 115200     // bps
@@ -28,6 +24,7 @@
 #define SPI_SCLK_PIN 18
 #define SPI_MISO_PIN 19
 #define SPI_MOSI_PIN 23
+#define DEBUG_MODE_EN_PIN 14
 
 #define DEVICE_ID 0
 #define BME_280_TEMPERATURE_SENSOR_IDENTIFIER 0
@@ -96,6 +93,10 @@ void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, M
 ///////////////////////////////////////////////////////////////
 /// Create a JSON string payload for the HTTP POST request.
 void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload);
+
+///////////////////////////////////////////////////////////////
+/// Check if the debug mode switch is on.
+bool isDebugMode();
 
 ///////////////////////////////////////////////////////////////
 /// Prints the measureData to the Serial Monitor.
