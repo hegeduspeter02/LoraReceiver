@@ -24,6 +24,7 @@
 #define SPI_SCLK_PIN 18
 #define SPI_MISO_PIN 19
 #define SPI_MOSI_PIN 23
+#define BUZZER_PIN 27
 #define DEBUG_MODE_EN_PIN 14
 
 #define DEVICE_ID 0
@@ -76,6 +77,10 @@ void connectToWifi(const char *ssid, const char *password);
 /*****************************************************************/
 /* WORKER FUNCTIONS                                              */
 /*****************************************************************/
+
+///////////////////////////////////////////////////////////////
+/// Play a beeping sound using the Piezo Buzzer.
+void playBeepingSound();
 
 void convertHexStringToByteArray(const String &hexString, uint8_t *byteArray, size_t &byteArraySize);
 

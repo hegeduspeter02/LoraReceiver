@@ -40,6 +40,10 @@ void loop()
   if (is_packet_received)
   {
     is_packet_received = false;
+    if(isDebugMode())
+    {
+      playBeepingSound();
+    }
 
     lastActivityTime = millis();
 

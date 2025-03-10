@@ -20,6 +20,7 @@ void configureGPIO()
   pinMode(RFM95_RESET_PIN, OUTPUT);
   pinMode(RFM95_DIO0_PIN, INPUT);
   pinMode(DEBUG_MODE_EN_PIN, INPUT_PULLUP);
+  pinMode(BUZZER_PIN, OUTPUT);
 }
 
 void connectToWifi(const char *ssid, const char *password)
@@ -86,6 +87,13 @@ void onReceive(int packetSize)
 
   LoRa.end(); // put the radio into sleep mode & disable spi bus
   is_packet_received = true;
+}
+
+void playBeepingSound()
+{
+  digitalWrite(BUZZER_PIN, HIGH);
+  delay(100);
+  digitalWrite(BUZZER_PIN, LOW);
 }
 
 String getReceivedMessage()
