@@ -19,6 +19,7 @@ void configureGPIO()
 {
   pinMode(RFM95_RESET_PIN, OUTPUT);
   pinMode(RFM95_DIO0_PIN, INPUT);
+  pinMode(DEBUG_MODE_EN_PIN, INPUT_PULLUP);
 }
 
 void connectToWifi(const char *ssid, const char *password)
