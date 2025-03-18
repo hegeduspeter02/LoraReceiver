@@ -1,3 +1,4 @@
+#include "esp32-hal-gpio.h"
 #include <LoraReceiver.h>
 #include <CayenneLPP.h>
 #include <HTTPClient.h>
@@ -180,7 +181,7 @@ void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPP
 
 bool isDebugMode()
 {
-  return digitalRead(DEBUG_MODE_EN_PIN) == LOW;
+  return digitalRead(DEBUG_MODE_EN_PIN) == HIGH;
 }
 
 void printMeasureDataToSerialMonitor(MeasureData &measureData)
