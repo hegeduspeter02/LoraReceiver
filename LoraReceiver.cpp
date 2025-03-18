@@ -1,4 +1,3 @@
-#include "esp32-hal-gpio.h"
 #include <LoraReceiver.h>
 #include <CayenneLPP.h>
 #include <HTTPClient.h>
