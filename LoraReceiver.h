@@ -24,10 +24,11 @@
                        LPP_BAROMETRIC_PRESSURE_SIZE + \
                        LPP_DIGITAL_INPUT_SIZE +       \
                        (LPP_PERCENTAGE_SIZE * 3)) // bytes
-
 #define PAYLOAD_SIZE ((LPP_DATA_ID_SIZE * NO_OF_RECEIVED_DATA) +      \
                       (LPP_DATA_CHANNEL_SIZE * NO_OF_RECEIVED_DATA) + \
                       LPP_DATA_SIZE) // bytes
+#define BYTE_TO_HEX_STRING_SIZE 2 // each byte is represented with two hex characters
+#define MESSAGE_SIZE (PAYLOAD_SIZE * BYTE_TO_HEX_STRING_SIZE) // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26

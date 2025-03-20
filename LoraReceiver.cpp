@@ -3,7 +3,7 @@
 #include <HTTPClient.h>
 
 volatile bool is_packet_received = false;
-char receivedMessage[PAYLOAD_SIZE + 1];
+char receivedMessage[MESSAGE_SIZE + 1];
 volatile int16_t packetRSSI = 0;
 
 void initializeSerialCommunication()
@@ -77,12 +77,12 @@ void onReceive(int packetSize)
 {
   memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
 
-  for (int i = 0; i < PAYLOAD_SIZE; i++)
+  for (int i = 0; i < MESSAGE_SIZE; i++)
   {
     receivedMessage[i] = ((char)LoRa.read());
   }
 
-  receivedMessage[PAYLOAD_SIZE] = '\0';
+  receivedMessage[MESSAGE_SIZE] = '\0';
   packetRSSI = LoRa.rssi();
 
   LoRa.end(); // put the radio into sleep mode & disable spi bus

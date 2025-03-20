@@ -54,9 +54,6 @@ void loop()
     Serial.println("Received message: " + getReceivedMessage());
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
 
-    String result = "";
-    serializeJsonPretty(JSONArrayPacket, result);
-    Serial.println(result);
     parseJsonArrayPacketToMeasureDataStruct(JSONArrayPacket, measureData);
     createPayloadForHTTPRequest(JSONArrayPacket, HTTPPayload);
 
