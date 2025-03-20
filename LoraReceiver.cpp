@@ -191,8 +191,8 @@ void printMeasureDataToSerialMonitor(MeasureData &measureData)
                 "UV index: %d\n"
                 "Soil moisture: %d%%\n"
                 "Rain intensity: %d%%\n"
-                "With RSSI: %d dBm\n"
                 "Battery level: %d%%\n"
+                "With RSSI: %d dBm\n"
                 "---------------------------------------------------------\n",
                 measureData.temperature,
                 measureData.humidity,
@@ -200,8 +200,8 @@ void printMeasureDataToSerialMonitor(MeasureData &measureData)
                 measureData.uvIndex,
                 measureData.soilMoisture,
                 measureData.rainPercent,
-                packetRSSI,
-                measureData.batLevel);
+                measureData.batLevel,
+                packetRSSI);
   Serial.flush();
 }
 
