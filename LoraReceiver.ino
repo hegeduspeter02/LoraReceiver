@@ -51,6 +51,7 @@ void loop()
     JsonDocument jsonBuffer;
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
+    Serial.println("Received message: " + getReceivedMessage());
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
 
     String result = "";
