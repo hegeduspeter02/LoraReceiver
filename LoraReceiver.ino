@@ -48,7 +48,7 @@ void loop()
     lastActivityTime = millis();
 
     // create a JSON document
-    JsonDocument jsonBuffer(4096);
+    JsonDocument jsonBuffer;
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
