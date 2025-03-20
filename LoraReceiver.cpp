@@ -152,13 +152,13 @@ void sendPayloadViaHTTPRequest(String &HTTPPayload)
 
 void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, MeasureData &measureData)
 {
-  measureData.temperature = JSONArrayPacket[BME_280_TEMPERATURE_SENSOR_IDENTIFIER]["value"];
-  measureData.humidity = JSONArrayPacket[BME_280_HUMIDITY_SENSOR_IDENTIFIER]["value"];
-  measureData.pressure = JSONArrayPacket[BME_280_PRESSURE_SENSOR_IDENTIFIER]["value"];
-  measureData.uvIndex = JSONArrayPacket[UV_SENSOR_IDENTIFIER]["value"];
-  measureData.soilMoisture = JSONArrayPacket[SOIL_MOISTURE_SENSOR_IDENTIFIER]["value"];
-  measureData.rainPercent = JSONArrayPacket[RAIN_SENSOR_IDENTIFIER]["value"];
-  measureData.batLevel = JSONArrayPacket[BAT_LEVEL_IDENTIFIER]["value"];
+  measureData.temperature = JSONArrayPacket[BME_280_TEMPERATURE_SENSOR_ID]["value"];
+  measureData.humidity = JSONArrayPacket[BME_280_HUMIDITY_SENSOR_ID]["value"];
+  measureData.pressure = JSONArrayPacket[BME_280_PRESSURE_SENSOR_ID]["value"];
+  measureData.uvIndex = JSONArrayPacket[UV_SENSOR_ID]["value"];
+  measureData.soilMoisture = JSONArrayPacket[SOIL_MOISTURE_SENSOR_ID]["value"];
+  measureData.rainPercent = JSONArrayPacket[RAIN_SENSOR_ID]["value"];
+  measureData.batLevel = JSONArrayPacket[BAT_LEVEL_ID]["value"];
 }
 
 void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload)

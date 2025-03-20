@@ -52,6 +52,9 @@ void loop()
     JsonArray JSONArrayPacket = jsonBuffer.to<JsonArray>();
 
     decodePacketToJsonArray(getReceivedMessage(), JSONArrayPacket);
+
+    String result = serializeJsonPretty(JSONArrayPacket);
+    Serial.println(result);
     parseJsonArrayPacketToMeasureDataStruct(JSONArrayPacket, measureData);
     createPayloadForHTTPRequest(JSONArrayPacket, HTTPPayload);
 

@@ -16,7 +16,18 @@
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
 #define INACTIVITY_THRESHOLD_MS (5 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define WIFI_CONNECTION_TIMEOUT_MS 10000 // ms
-#define PAYLOAD_SIZE 23                  // bytes
+#define NO_OF_RECEIVED_DATA 7
+#define LPP_DATA_ID_SIZE 1      // byte
+#define LPP_DATA_CHANNEL_SIZE 1 // byte
+#define LPP_DATA_SIZE (LPP_TEMPERATURE_SIZE +         \
+                       LPP_RELATIVE_HUMIDITY_SIZE +   \
+                       LPP_BAROMETRIC_PRESSURE_SIZE + \
+                       LPP_DIGITAL_INPUT_SIZE +       \
+                       (LPP_PERCENTAGE_SIZE * 3)) // bytes
+
+#define PAYLOAD_SIZE ((LPP_DATA_ID_SIZE * NO_OF_RECEIVED_DATA) +      \
+                      (LPP_DATA_CHANNEL_SIZE * NO_OF_RECEIVED_DATA) + \
+                      LPP_DATA_SIZE) // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26
@@ -28,13 +39,13 @@
 #define DEBUG_MODE_EN_PIN 14
 
 #define DEVICE_ID 0
-#define BME_280_TEMPERATURE_SENSOR_IDENTIFIER 0
-#define BME_280_HUMIDITY_SENSOR_IDENTIFIER 1
-#define BME_280_PRESSURE_SENSOR_IDENTIFIER 2
-#define UV_SENSOR_IDENTIFIER 3
-#define SOIL_MOISTURE_SENSOR_IDENTIFIER 4
-#define RAIN_SENSOR_IDENTIFIER 5
-#define BAT_LEVEL_IDENTIFIER 6
+#define BME_280_TEMPERATURE_SENSOR_ID 0
+#define BME_280_HUMIDITY_SENSOR_ID 1
+#define BME_280_PRESSURE_SENSOR_ID 2
+#define UV_SENSOR_ID 3
+#define SOIL_MOISTURE_SENSOR_ID 4
+#define RAIN_SENSOR_ID 5
+#define BAT_LEVEL_ID 6
 
 /*****************************************************************/
 /* GLOBAL VARIABLES                                              */
