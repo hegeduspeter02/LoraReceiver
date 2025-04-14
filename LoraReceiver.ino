@@ -65,7 +65,6 @@ void loop()
 
     // disconnect from network and turn the radio off
     WiFi.disconnect(true);
-
     esp_light_sleep_start();
 
     // after wakeup

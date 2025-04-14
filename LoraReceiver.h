@@ -11,8 +11,8 @@
 #define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 115200     // bps
 #define RFM95_COMM_FREQ 868E6
-#define RFM95_SEND_RATE 60 // s
-#define SLEEP_TIME_FACTOR 0.8f
+#define RFM95_SEND_RATE 10 // s
+#define SLEEP_TIME_FACTOR 0.3f
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
 #define INACTIVITY_THRESHOLD_MS (5 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define WIFI_CONNECTION_TIMEOUT_MS 10000 // ms
@@ -20,14 +20,14 @@
 #define LPP_DATA_ID_SIZE 1      // byte
 #define LPP_DATA_CHANNEL_SIZE 1 // byte
 #define LPP_DATA_SIZE (LPP_TEMPERATURE_SIZE +         \
-                       LPP_RELATIVE_HUMIDITY_SIZE +   \
-                       LPP_BAROMETRIC_PRESSURE_SIZE + \
-                       LPP_DIGITAL_INPUT_SIZE +       \
+                      LPP_RELATIVE_HUMIDITY_SIZE +   \
+                      LPP_BAROMETRIC_PRESSURE_SIZE + \
+                      LPP_DIGITAL_INPUT_SIZE +       \
                        (LPP_PERCENTAGE_SIZE * 3)) // bytes
 #define PAYLOAD_SIZE ((LPP_DATA_ID_SIZE * NO_OF_RECEIVED_DATA) +      \
                       (LPP_DATA_CHANNEL_SIZE * NO_OF_RECEIVED_DATA) + \
-                      LPP_DATA_SIZE) // bytes
-#define BYTE_TO_HEX_STRING_SIZE 2 // each byte is represented with two hex characters
+                      LPP_DATA_SIZE)                          // bytes
+#define BYTE_TO_HEX_STRING_SIZE 2                             // each byte is represented with two hex characters
 #define MESSAGE_SIZE (PAYLOAD_SIZE * BYTE_TO_HEX_STRING_SIZE) // bytes
 
 #define RFM95_RESET_PIN 25
