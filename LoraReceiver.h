@@ -47,7 +47,6 @@
 #define SOIL_MOISTURE_SENSOR_ID 4
 #define RAIN_SENSOR_ID 5
 #define BAT_LEVEL_ID 6
-#define PACKET_RSSI_ID 7
 
 /*****************************************************************/
 /* GLOBAL VARIABLES                                              */
@@ -107,10 +106,6 @@ void decodePacketToJsonArray(const String &hexString, JsonArray &JSONArrayPacket
 void sendPayloadViaHTTPRequest(String &HTTPPayload);
 
 void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, MeasureData &measureData);
-
-///////////////////////////////////////////////////////////////
-/// Add additional data to the JSON payload with the given key.
-void addAdditionalDataToPayload(JsonDocument &doc, const char *key, int sensorId, int value);
 
 ///////////////////////////////////////////////////////////////
 /// Create a JSON string payload for the HTTP POST request.
