@@ -161,6 +161,13 @@ void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, M
   measureData.batLevel = JSONArrayPacket[BAT_LEVEL_ID]["value"];
 }
 
+void addAdditionalDataToPayload(JsonDocument &doc, const char *key, int sensorId, int value)
+{
+  JsonObject additionalData = doc.createNestedObject(key);
+  additionalData["sensorId"] = sensorId;
+  additionalData["value"] = String(value);
+}
+
 void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload)
 {
   JsonDocument doc;
@@ -174,6 +181,8 @@ void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPP
     measurement["sensorId"] = jsonPacket["channel"];
     measurement["value"] = String(jsonPacket["value"]);
   }
+
+  addAdditionalDataToPayload(doc, "packetRssi", PACKET_RSSI_ID, packetRSSI);
 
   serializeJson(doc, HTTPPayload);
 }
