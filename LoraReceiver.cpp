@@ -5,7 +5,7 @@
 volatile bool is_packet_received = false;
 char receivedMessage[MESSAGE_SIZE + 1];
 int16_t packetRSSI = 0;
-int8_t packetSNR = 0;
+float packetSNR = 0;
 
 void initializeSerialCommunication()
 {
@@ -197,6 +197,7 @@ void printMeasureDataToSerialMonitor(MeasureData &measureData)
                 "Rain intensity: %d%%\n"
                 "Battery level: %d%%\n"
                 "With RSSI: %d dBm\n"
+                "With SNR: %.1f dB\n"
                 "---------------------------------------------------------\n",
                 measureData.temperature,
                 measureData.humidity,
@@ -205,7 +206,8 @@ void printMeasureDataToSerialMonitor(MeasureData &measureData)
                 measureData.soilMoisture,
                 measureData.rainPercent,
                 measureData.batLevel,
-                packetRSSI);
+                packetRSSI,
+                packetSNR);
   Serial.flush();
 }
 
