@@ -53,7 +53,8 @@
 /*****************************************************************/
 extern volatile bool is_packet_received;
 extern char receivedMessage[];
-extern volatile int16_t packetRSSI;
+extern int16_t packetRSSI;
+extern int8_t packetSNR;
 
 /*****************************************************************/
 /* STRUCTURES                                                    */

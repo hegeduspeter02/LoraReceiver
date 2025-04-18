@@ -4,7 +4,8 @@
 
 volatile bool is_packet_received = false;
 char receivedMessage[MESSAGE_SIZE + 1];
-volatile int16_t packetRSSI = 0;
+int16_t packetRSSI = 0;
+int8_t packetSNR = 0;
 
 void initializeSerialCommunication()
 {
@@ -83,7 +84,8 @@ void onReceive(int packetSize)
   }
 
   receivedMessage[MESSAGE_SIZE] = '\0';
-  packetRSSI = LoRa.rssi();
+  packetRSSI = LoRa.packetRssi();
+  packetSNR = LoRa.packetSnr();
 
   LoRa.end(); // put the radio into sleep mode & disable spi bus
   is_packet_received = true;
@@ -167,6 +169,7 @@ void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPP
 
   doc["deviceId"] = DEVICE_ID;
   doc["packetRSSI"] = packetRSSI;
+  doc["packetSNR"] = packetSNR;
 
   JsonArray measurements = doc.createNestedArray("measurements");
   for (JsonObject jsonPacket : JSONArrayPacket)
