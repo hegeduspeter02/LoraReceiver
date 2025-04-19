@@ -7,6 +7,10 @@
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
 /*****************************************************************/
+#ifndef LIGHT_SLEEP_ENABLED
+#define LIGHT_SLEEP_ENABLED 0
+#endif
+
 #define mS_TO_S_FACTOR 1000    // us
 #define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 115200     // bps
@@ -15,7 +19,7 @@
 #define SLEEP_TIME_FACTOR 0.3f
 #define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
 #define INACTIVITY_THRESHOLD_MS (5 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
-#define WIFI_CONNECTION_TIMEOUT_MS 10000 // ms
+#define WIFI_CONNECTION_TIMEOUT_MS 20000 // ms
 #define NO_OF_RECEIVED_DATA 7
 #define LPP_DATA_ID_SIZE 1      // byte
 #define LPP_DATA_CHANNEL_SIZE 1 // byte

@@ -30,7 +30,9 @@ void setup()
   LoRa.onReceive(onReceive);       // register packet receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
-  esp_sleep_enable_timer_wakeup(ESP_WAKE_UP_PERIOD_US);
+  #if LIGHT_SLEEP_ENABLED
+    esp_sleep_enable_timer_wakeup(ESP_WAKE_UP_PERIOD_US);
+  #endif
 
   lastActivityTime = millis(); // now
 }
@@ -63,16 +65,18 @@ void loop()
 
     sendPayloadViaHTTPRequest(HTTPPayload);
 
-    // disconnect from network and turn the radio off
-    WiFi.disconnect(true);
-    esp_light_sleep_start();
+    #if LIGHT_SLEEP_ENABLED
+      // disconnect from network and turn the radio off
+      WiFi.disconnect(true);
+      esp_light_sleep_start();
 
-    // after wakeup
-    connectToWifi(ssid, password);
+      // after wakeup
+      connectToWifi(ssid, password);
+    #endif
 
     LoRa.begin(RFM95_COMM_FREQ); // reset library
     LoRa.channelActivityDetection();
   }
 
-  handleInactivity(lastActivityTime);
+  //handleInactivity(lastActivityTime);
 }
