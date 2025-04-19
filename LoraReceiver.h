@@ -27,7 +27,7 @@
                       LPP_RELATIVE_HUMIDITY_SIZE +   \
                       LPP_BAROMETRIC_PRESSURE_SIZE + \
                       LPP_DIGITAL_INPUT_SIZE +       \
-                       (LPP_PERCENTAGE_SIZE * 3)) // bytes
+                      (LPP_PERCENTAGE_SIZE * 3)) // bytes
 #define PAYLOAD_SIZE ((LPP_DATA_ID_SIZE * NO_OF_RECEIVED_DATA) +      \
                       (LPP_DATA_CHANNEL_SIZE * NO_OF_RECEIVED_DATA) + \
                       LPP_DATA_SIZE)                          // bytes
