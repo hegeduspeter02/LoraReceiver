@@ -26,7 +26,7 @@ void setup()
     while (1);
   }
 
-  LoRa.setGain(6);
+  LoRa.setGain(1);
   LoRa.onCadDone(onCadDone);       // register channel activity detection callback
   LoRa.onReceive(onReceive);       // register packet receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
