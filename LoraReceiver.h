@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include "config.h"
 #include <WiFi.h>
+#include <CayenneLPP.h>
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -30,9 +31,7 @@
                       (LPP_PERCENTAGE_SIZE * 3)) // bytes
 #define PAYLOAD_SIZE ((LPP_DATA_ID_SIZE * NO_OF_RECEIVED_DATA) +      \
                       (LPP_DATA_CHANNEL_SIZE * NO_OF_RECEIVED_DATA) + \
-                      LPP_DATA_SIZE)                          // bytes
-#define BYTE_TO_HEX_STRING_SIZE 2                             // each byte is represented with two hex characters
-#define MESSAGE_SIZE (PAYLOAD_SIZE * BYTE_TO_HEX_STRING_SIZE) // bytes
+                      LPP_DATA_SIZE) // bytes
 
 #define RFM95_RESET_PIN 25
 #define RFM95_DIO0_PIN 26
@@ -53,10 +52,26 @@
 #define BAT_LEVEL_ID 6
 
 /*****************************************************************/
+/* PREDIFINED CONSTS FOR OPTIMIZING POWER CONSUMPTION- START     */
+/*****************************************************************/
+#define HIGH_POWER_SPREADING_FACTOR 12
+#define MEDIUM_POWER_SPREADING_FACTOR 10
+#define LOW_POWER_SPREADING_FACTOR 7
+
+#define HIGH_AND_MEDIUM_POWER_SIGNAL_BANDWIDTH 125E3
+#define LOW_POWER_SIGNAL_BANDWIDTH 250E3
+
+#define HIGH_POWER_CODING_RATE_DENOMINATOR 8           // 4/8
+#define MEDIUM_AND_LOW_POWER_CODING_RATE_DENOMINATOR 5 // 4/5
+/*****************************************************************/
+/* PREDIFINED CONSTS FOR OPTIMIZING POWER CONSUMPTION- END       */
+/*****************************************************************/
+
+/*****************************************************************/
 /* GLOBAL VARIABLES                                              */
 /*****************************************************************/
-extern volatile bool is_packet_received;
-extern char receivedMessage[];
+extern volatile bool isPacketReceived;
+extern uint8_t* receivedPayload;
 extern int16_t packetRSSI;
 extern float packetSNR;
 
@@ -72,6 +87,16 @@ struct MeasureData
   uint8_t soilMoisture;
   uint8_t rainPercent;
   uint8_t batLevel;
+};
+
+/*****************************************************************/
+/* ENUMS                                                         */
+/*****************************************************************/
+enum PowerMode
+{
+  LOW_POWER_MODE,
+  MEDIUM_POWER_MODE,
+  HIGH_POWER_MODE
 };
 
 /*****************************************************************/
@@ -91,6 +116,10 @@ void configureGPIO();
 /// Connect to a WiFi network with given ssid and password.
 void connectToWifi(const char *ssid, const char *password);
 
+///////////////////////////////////////////////////////////////
+/// Set the LoRa parameters for the given power mode.
+void setLoRaParametersFor(PowerMode powerMode);
+
 /*****************************************************************/
 /* WORKER FUNCTIONS                                              */
 /*****************************************************************/
@@ -99,12 +128,9 @@ void connectToWifi(const char *ssid, const char *password);
 /// Play a beeping sound using the Piezo Buzzer.
 void playBeepingSound();
 
-void convertHexStringToByteArray(const String &hexString, uint8_t *byteArray, size_t &byteArraySize);
-
 ///////////////////////////////////////////////////////////////
-/// Convert the received hexadecimal encoded Low Power Payload
-/// string to JSON array.
-void decodePacketToJsonArray(const String &hexString, JsonArray &JSONArrayPacket);
+/// Convert the received Low Power Payload to a JSON array.
+void decodePacketToJsonArray(JsonArray &JSONArrayPacket);
 
 ///////////////////////////////////////////////////////////////
 /// Send the decoded JSON packet via HTTP POST request.
@@ -131,10 +157,6 @@ void onCadDone(boolean signalDetected);
 ///////////////////////////////////////////////////////////////
 /// Callback function called when packet is received.
 void onReceive(int packetSize);
-
-///////////////////////////////////////////////////////////////
-/// Get the last received packet's content.
-String getReceivedMessage();
 
 ///////////////////////////////////////////////////////////////
 /// Stop the used libraries.

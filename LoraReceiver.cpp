@@ -1,9 +1,8 @@
 #include <LoraReceiver.h>
-#include <CayenneLPP.h>
 #include <HTTPClient.h>
 
-volatile bool is_packet_received = false;
-char receivedMessage[MESSAGE_SIZE + 1];
+volatile bool isPacketReceived = false;
+uint8_t* receivedPayload;
 int16_t packetRSSI = 0;
 float packetSNR = 0;
 
@@ -62,6 +61,30 @@ void connectToWifi(const char *ssid, const char *password)
   }
 }
 
+void setLoRaParametersFor(PowerMode powerMode)
+{
+  switch(powerMode)
+  {
+    case LOW_POWER_MODE:
+      LoRa.setSpreadingFactor(LOW_POWER_SPREADING_FACTOR);
+      LoRa.setSignalBandwidth(LOW_POWER_SIGNAL_BANDWIDTH);
+      LoRa.setCodingRate4(MEDIUM_AND_LOW_POWER_CODING_RATE_DENOMINATOR);
+      break;
+
+    case MEDIUM_POWER_MODE:
+      LoRa.setSpreadingFactor(MEDIUM_POWER_SPREADING_FACTOR);
+      LoRa.setSignalBandwidth(HIGH_AND_MEDIUM_POWER_SIGNAL_BANDWIDTH);
+      LoRa.setCodingRate4(MEDIUM_AND_LOW_POWER_CODING_RATE_DENOMINATOR);
+      break;
+
+    case HIGH_POWER_MODE:
+      LoRa.setSpreadingFactor(HIGH_POWER_SPREADING_FACTOR);
+      LoRa.setSignalBandwidth(HIGH_AND_MEDIUM_POWER_SIGNAL_BANDWIDTH);
+      LoRa.setCodingRate4(HIGH_POWER_CODING_RATE_DENOMINATOR);
+      break;
+  }
+}
+
 void onCadDone(boolean signalDetected)
 {
   if (signalDetected)
@@ -70,25 +93,26 @@ void onCadDone(boolean signalDetected)
   }
   else
   {
-    LoRa.channelActivityDetection(); // try next activity dectection
+    LoRa.channelActivityDetection(); // try next activity detection
   }
 }
 
 void onReceive(int packetSize)
 {
-  memset(receivedMessage, 0, sizeof(receivedMessage)); // clear previous message
+  static uint8_t payloadBuffer[PAYLOAD_SIZE];
+  receivedPayload = payloadBuffer;
+  memset(receivedPayload, 0, PAYLOAD_SIZE); // clear the previous payload
 
-  for (int i = 0; i < MESSAGE_SIZE; i++)
+  for (int i = 0; i < PAYLOAD_SIZE; i++)
   {
-    receivedMessage[i] = ((char)LoRa.read());
+    receivedPayload[i] = LoRa.read();
   }
 
-  receivedMessage[MESSAGE_SIZE] = '\0';
   packetRSSI = LoRa.packetRssi();
   packetSNR = LoRa.packetSnr();
 
   LoRa.end(); // put the radio into sleep mode & disable spi bus
-  is_packet_received = true;
+  isPacketReceived = true;
 }
 
 void playBeepingSound()
@@ -98,29 +122,10 @@ void playBeepingSound()
   digitalWrite(BUZZER_PIN, LOW);
 }
 
-String getReceivedMessage()
+void decodePacketToJsonArray(JsonArray &JSONArrayPacket)
 {
-  return String(receivedMessage);
-}
-
-void convertHexStringToByteArray(const String &hexString, uint8_t *byteArray, size_t &byteArraySize)
-{
-  byteArraySize = hexString.length() / 2; // each byte is represented with two hex characters
-  for (size_t i = 0; i < byteArraySize; i++)
-  {
-    sscanf(hexString.substring(i * 2, i * 2 + 2).c_str(), "%02hhX", &byteArray[i]);
-  }
-}
-
-void decodePacketToJsonArray(const String &hexString, JsonArray &JSONArrayPacket)
-{
-  uint8_t buffer[PAYLOAD_SIZE];
-  size_t bufferSize;
-
-  convertHexStringToByteArray(hexString, buffer, bufferSize);
-
   CayenneLPP lpp(PAYLOAD_SIZE);
-  lpp.decode(buffer, bufferSize, JSONArrayPacket);
+  lpp.decode(receivedPayload, PAYLOAD_SIZE, JSONArrayPacket);
 }
 
 void sendPayloadViaHTTPRequest(String &HTTPPayload)
