@@ -12,6 +12,10 @@
 #define LIGHT_SLEEP_ENABLED 0
 #endif
 
+#ifndef POWER_MODE
+#define POWER_MODE MEDIUM_POWER_MODE
+#endif
+
 #define mS_TO_S_FACTOR 1000    // us
 #define uS_TO_S_FACTOR 1000000 // us
 #define SERIAL_BAUD 115200     // bps

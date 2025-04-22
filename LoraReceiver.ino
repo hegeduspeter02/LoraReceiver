@@ -27,7 +27,7 @@ void setup()
   }
 
   LoRa.setGain(1);
-  setLoRaParametersFor(HIGH_POWER_MODE);
+  setLoRaParametersFor(POWER_MODE);
   LoRa.onCadDone(onCadDone);       // register channel activity detection callback
   LoRa.onReceive(onReceive);       // register packet receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
@@ -75,7 +75,7 @@ void loop()
     #endif
 
     LoRa.begin(RFM95_COMM_FREQ); // reset library
-    setLoRaParametersFor(HIGH_POWER_MODE);
+    setLoRaParametersFor(POWER_MODE);
     LoRa.channelActivityDetection();
   }
 
