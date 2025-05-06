@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <LoRa.h>
 #include <ArduinoJson.h>
-#include "config.h"
+#include "src/config.h"
 #include <WiFi.h>
 #include <CayenneLPP.h>
 

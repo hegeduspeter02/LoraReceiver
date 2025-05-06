@@ -9,10 +9,7 @@ float packetSNR = 0;
 void initializeSerialCommunication()
 {
   Serial.begin(SERIAL_BAUD);
-  while (!Serial)
-  {
-  } // wait until the serial port is ready and connected
-  delay(100); // wait for Serial Monitor to initialize
+  while (!Serial){} // wait until the serial port is ready and connected
 }
 
 void configureGPIO()
