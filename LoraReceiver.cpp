@@ -124,9 +124,12 @@ float getLightSleepTime_uS(SendRate sendRate)
 {
   switch (sendRate)
   {
-    case TEN_SECONDS: return (0.3f * TEN_SECONDS * uS_TO_S_FACTOR);
-    case ONE_MINUTE:  return (0.8f * ONE_MINUTE * uS_TO_S_FACTOR);
-    case FIVE_MINUTES: return (0.95f * FIVE_MINUTES * uS_TO_S_FACTOR);
+  case TEN_SECONDS:
+    return (0.3f * TEN_SECONDS * uS_TO_S_FACTOR);
+  case ONE_MINUTE:
+    return (0.8f * ONE_MINUTE * uS_TO_S_FACTOR);
+  case FIVE_MINUTES:
+    return (0.95f * FIVE_MINUTES * uS_TO_S_FACTOR);
   }
 }
 

@@ -1,9 +1,9 @@
 #include <Arduino.h>
 #include <LoRa.h>
 #include <ArduinoJson.h>
-#include "src/config.h"
 #include <WiFi.h>
 #include <CayenneLPP.h>
+#include "src/config.h"
 
 /*****************************************************************/
 /* GLOBAL CONSTS                                                 */
@@ -143,7 +143,7 @@ void onCadDone(boolean signalDetected);
 void onReceive(int packetSize);
 
 ///////////////////////////////////////////////////////////////
-/// Check if the debug mode switch is on.
+/// Check if the debug mode switch is ON.
 bool isDebugMode();
 
 ///////////////////////////////////////////////////////////////
@@ -166,11 +166,11 @@ void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, M
 void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload);
 
 ///////////////////////////////////////////////////////////////
-/// Send the decoded JSON packet via HTTP POST request.
+/// Send the JSON string payload via HTTP POST request.
 void sendPayloadViaHTTPRequest(String &HTTPPayload);
 
 ///////////////////////////////////////////////////////////////
-/// Prints the measureData to the Serial Monitor.
+/// Prints the measured data to the Serial Monitor.
 void printMeasureDataToSerialMonitor(MeasureData &measureData);
 
 ///////////////////////////////////////////////////////////////
@@ -182,5 +182,5 @@ void endLibraries();
 void enterDeepSleepForAnHour();
 
 ///////////////////////////////////////////////////////////////
-/// If not receiving packets, enter deep sleep until reset.
+/// If not receiving packets, enter deep sleep mode.
 void handleInactivity(unsigned long &lastActivityTime);
