@@ -9,20 +9,19 @@
 /* GLOBAL CONSTS                                                 */
 /*****************************************************************/
 #ifndef LIGHT_SLEEP_ENABLED
-#define LIGHT_SLEEP_ENABLED 0
+#define LIGHT_SLEEP_ENABLED 1
 #endif
 
 #ifndef POWER_MODE
-#define POWER_MODE MEDIUM_POWER_MODE
+#define POWER_MODE PowerMode::HIGH_POWER_MODE
 #endif
 
 #define mS_TO_S_FACTOR 1000    // us
 #define uS_TO_S_FACTOR 1000000 // us
+#define ONE_HOUR_US (3600ULL * uS_TO_S_FACTOR)
 #define SERIAL_BAUD 115200     // bps
 #define RFM95_COMM_FREQ 868E6
-#define RFM95_SEND_RATE 300 // s
-#define SLEEP_TIME_FACTOR 0.9f
-#define ESP_WAKE_UP_PERIOD_US (SLEEP_TIME_FACTOR * RFM95_SEND_RATE * uS_TO_S_FACTOR)
+#define RFM95_SEND_RATE SendRate::ONE_MINUTE
 #define INACTIVITY_THRESHOLD_MS (5 * RFM95_SEND_RATE * mS_TO_S_FACTOR)
 #define WIFI_CONNECTION_TIMEOUT_MS 20000 // ms
 #define NO_OF_RECEIVED_DATA 7
@@ -103,6 +102,13 @@ enum PowerMode
   HIGH_POWER_MODE
 };
 
+enum SendRate
+{
+  TEN_SECONDS = 10, // s
+  ONE_MINUTE = 60, // s
+  FIVE_MINUTES = 300, // s
+};
+
 /*****************************************************************/
 /* INIT FUNCTIONS                                                */
 /*****************************************************************/
@@ -129,32 +135,6 @@ void setLoRaParametersFor(PowerMode powerMode);
 /*****************************************************************/
 
 ///////////////////////////////////////////////////////////////
-/// Play a beeping sound using the Piezo Buzzer.
-void playBeepingSound();
-
-///////////////////////////////////////////////////////////////
-/// Convert the received Low Power Payload to a JSON array.
-void decodePacketToJsonArray(JsonArray &JSONArrayPacket);
-
-///////////////////////////////////////////////////////////////
-/// Send the decoded JSON packet via HTTP POST request.
-void sendPayloadViaHTTPRequest(String &HTTPPayload);
-
-void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, MeasureData &measureData);
-
-///////////////////////////////////////////////////////////////
-/// Create a JSON string payload for the HTTP POST request.
-void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload);
-
-///////////////////////////////////////////////////////////////
-/// Check if the debug mode switch is on.
-bool isDebugMode();
-
-///////////////////////////////////////////////////////////////
-/// Prints the measureData to the Serial Monitor.
-void printMeasureDataToSerialMonitor(MeasureData &measureData);
-
-///////////////////////////////////////////////////////////////
 /// Callback function called after channel activity was detected.
 void onCadDone(boolean signalDetected);
 
@@ -163,12 +143,43 @@ void onCadDone(boolean signalDetected);
 void onReceive(int packetSize);
 
 ///////////////////////////////////////////////////////////////
+/// Check if the debug mode switch is on.
+bool isDebugMode();
+
+///////////////////////////////////////////////////////////////
+/// Calculates the light sleep time in us
+/// based on the given send rate.
+float getLightSleepTime_uS(SendRate sendRate);
+
+///////////////////////////////////////////////////////////////
+/// Play a beeping sound using the Piezo Buzzer.
+void playBeepingSound();
+
+///////////////////////////////////////////////////////////////
+/// Convert the received Low Power Payload to a JSON array.
+void decodePacketToJsonArray(JsonArray &JSONArrayPacket);
+
+void parseJsonArrayPacketToMeasureDataStruct(const JsonArray &JSONArrayPacket, MeasureData &measureData);
+
+///////////////////////////////////////////////////////////////
+/// Create a JSON string payload for the HTTP POST request.
+void createPayloadForHTTPRequest(const JsonArray &JSONArrayPacket, String &HTTPPayload);
+
+///////////////////////////////////////////////////////////////
+/// Send the decoded JSON packet via HTTP POST request.
+void sendPayloadViaHTTPRequest(String &HTTPPayload);
+
+///////////////////////////////////////////////////////////////
+/// Prints the measureData to the Serial Monitor.
+void printMeasureDataToSerialMonitor(MeasureData &measureData);
+
+///////////////////////////////////////////////////////////////
 /// Stop the used libraries.
 void endLibraries();
 
 ///////////////////////////////////////////////////////////////
-/// Enter deep sleep mode until user reset.
-void enterDeepSleepForever();
+/// Enter deep sleep mode for an hour.
+void enterDeepSleepForAnHour();
 
 ///////////////////////////////////////////////////////////////
 /// If not receiving packets, enter deep sleep until reset.

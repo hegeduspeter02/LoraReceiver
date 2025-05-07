@@ -26,15 +26,12 @@ void setup()
     while (1);
   }
 
-  LoRa.setGain(1);
   setLoRaParametersFor(POWER_MODE);
   LoRa.onCadDone(onCadDone);       // register channel activity detection callback
   LoRa.onReceive(onReceive);       // register packet receive callback
   LoRa.channelActivityDetection(); // put the radio into CAD mode
 
-  #if LIGHT_SLEEP_ENABLED
-    esp_sleep_enable_timer_wakeup(ESP_WAKE_UP_PERIOD_US);
-  #endif
+  esp_sleep_enable_timer_wakeup(getLightSleepTime_uS(RFM95_SEND_RATE));
 
   lastActivityTime = millis(); // now
 }
@@ -79,5 +76,5 @@ void loop()
     LoRa.channelActivityDetection();
   }
 
-  //handleInactivity(lastActivityTime);
+  handleInactivity(lastActivityTime);
 }
