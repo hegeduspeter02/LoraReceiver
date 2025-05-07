@@ -40,3 +40,16 @@
     - Using Arduino IDE:
       - Set the board to DOIT ESP32 DEVKIT V1 and select the correct COM port
       - Use the Upload button
+
+## WiFi setup
+
+1. Create a `config.cpp` file in the `src` directory
+2. Add the following code to the `config.cpp` file:
+
+```cpp
+#include "src/config.h"
+
+const char *ssid = "your_wifi_ssid";
+const char *password = "your_wifi_password";
+const char *serverUrl = "server_url"; // e.g. "https://example.com/api"
+```
