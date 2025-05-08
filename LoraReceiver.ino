@@ -71,9 +71,6 @@ void loop()
       connectToWifi(ssid, password);
     #endif
 
-    //LoRa.begin(RFM95_COMM_FREQ); // reset library
-    //setLoRaParametersFor(POWER_MODE);
-    //LoRa.idle();
     LoRa.channelActivityDetection();
   }
 
