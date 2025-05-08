@@ -111,7 +111,8 @@ void onReceive(int packetSize)
   packetRSSI = LoRa.packetRssi();
   packetSNR = LoRa.packetSnr();
 
-  LoRa.end(); // put the radio into sleep mode & disable spi bus
+  //LoRa.end(); // put the radio into sleep mode & disable spi bus
+  LoRa.sleep(); // put the radio into sleep mode
   isPacketReceived = true;
 }
 
