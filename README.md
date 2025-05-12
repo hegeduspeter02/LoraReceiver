@@ -2,7 +2,7 @@
 
 ## Image of the prototype
 
-![LoRa Receiver](schematics/LoraReceiver_top_down_view.jpg)
+![LoRa Receiver](schematics/LoraReceiver_top_down_view.jpg){ width=50% }
 
 ## Project setup
 
