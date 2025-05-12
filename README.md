@@ -1,5 +1,9 @@
 # LoRa Receiver
 
+## Image of the prototype
+
+![LoRa Receiver](schematics/LoraReceiver_top_down_view.jpg)
+
 ## Project setup
 
 1. Install Make (through GnuWin): <https://gnuwin32.sourceforge.net/packages/make.htm>
